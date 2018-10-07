@@ -1,5 +1,6 @@
 """  		   	  			    		  		  		    	 		 		   		 		  
 A simple wrapper for linear regression.  (c) 2015 Tucker Balch  		   	  			    		  		  		    	 		 		   		 		  
+Note, this is NOT a correct DTLearner; Replace with your own implementation.  		   	  			    		  		  		    	 		 		   		 		  
 Copyright 2018, Georgia Institute of Technology (Georgia Tech)  		   	  			    		  		  		    	 		 		   		 		  
 Atlanta, Georgia 30332  		   	  			    		  		  		    	 		 		   		 		  
 All Rights Reserved  		   	  			    		  		  		    	 		 		   		 		  
@@ -19,13 +20,19 @@ students of CS 7646 is prohibited and subject to being investigated as a
 GT honor code violation.  		   	  			    		  		  		    	 		 		   		 		  
   		   	  			    		  		  		    	 		 		   		 		  
 -----do not edit anything above this line---  		   	  			    		  		  		    	 		 		   		 		  
+  		   	  			    		  		  		    	 		 		   		 		  
+Student Name: Tucker Balch (replace with your name)  		   	  			    		  		  		    	 		 		   		 		  
+GT User ID: tb34 (replace with your User ID)  		   	  			    		  		  		    	 		 		   		 		  
+GT ID: 900897987 (replace with your GT ID)  		   	  			    		  		  		    	 		 		   		 		  
 """  		   	  			    		  		  		    	 		 		   		 		  
   		   	  			    		  		  		    	 		 		   		 		  
 import numpy as np  		   	  			    		  		  		    	 		 		   		 		  
+import warnings  		   	  			    		  		  		    	 		 		   		 		  
   		   	  			    		  		  		    	 		 		   		 		  
-class LinRegLearner(object):  		   	  			    		  		  		    	 		 		   		 		  
+class DTLearner(object):  		   	  			    		  		  		    	 		 		   		 		  
   		   	  			    		  		  		    	 		 		   		 		  
-    def __init__(self, verbose = False):  		   	  			    		  		  		    	 		 		   		 		  
+    def __init__(self, leaf_size=1, verbose = False):  		   	  			    		  		  		    	 		 		   		 		  
+        warnings.warn("\n\n  WARNING! THIS IS NOT A CORRECT DTLearner IMPLEMENTATION! REPLACE WITH YOUR OWN CODE\n")  		   	  			    		  		  		    	 		 		   		 		  
         pass # move along, these aren't the drones you're looking for  		   	  			    		  		  		    	 		 		   		 		  
   		   	  			    		  		  		    	 		 		   		 		  
     def author(self):  		   	  			    		  		  		    	 		 		   		 		  
