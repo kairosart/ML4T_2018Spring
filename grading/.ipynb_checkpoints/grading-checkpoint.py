@@ -62,6 +62,8 @@ class Grader(object):
         with open(filename, "w") as f:     
             f.write("{}\n".format(self.total_points)) 
     def write_performance(self,filename="performance.txt"):    
+        print(self.performance)
+        pass
         if self.performance is None:  
             print("No performance metric collected, skipping")
         else:  
