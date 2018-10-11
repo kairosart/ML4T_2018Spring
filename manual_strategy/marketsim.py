@@ -123,9 +123,9 @@ def market_simulator(df_orders, df_orders_benchmark, start_val=1000000, commissi
      daily_rf=daily_rf, samples_per_year=samples_per_year)
 
     # Compare portfolio against Benchmark
-    print ("Sharpe Ratio of Portfolio: {}".format(sharpe_ratio))
-    print ("Sharpe Ratio of Benchmark : {}".format(sharpe_ratio_bm))
-    print ()
+    #print ("Sharpe Ratio of Portfolio: {}".format(sharpe_ratio))
+    #print ("Sharpe Ratio of Benchmark : {}".format(sharpe_ratio_bm))
+    #print ()
     print ("Cumulative Return of Portfolio: {}".format(cum_ret))
     print ("Cumulative Return of Benchmark : {}".format(cum_ret_bm))
     print ()
@@ -135,8 +135,8 @@ def market_simulator(df_orders, df_orders_benchmark, start_val=1000000, commissi
     print ("Average Daily Return of Portfolio: {}".format(avg_daily_ret))
     print ("Average Daily Return of Benchmark : {}".format(avg_daily_ret_bm))
     print ()
-    print ("Final Portfolio Value: {}".format(portvals.iloc[-1, -1]))
-    print ("Final Benchmark Value: {}".format(portvals_bm.iloc[-1, -1]))
+    #print ("Final Portfolio Value: {}".format(portvals.iloc[-1, -1]))
+    #print ("Final Benchmark Value: {}".format(portvals_bm.iloc[-1, -1]))
 
     # Rename columns and normalize data to the first date of the date range
     portvals.rename(columns={"port_val": "Portfolio"}, inplace=True)
@@ -201,7 +201,7 @@ def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm,
                 x=df.index,
                 y=df.loc[:, "Portfolio"],
                 name = "Portfolio",
-                line = dict(color = '#04B404'),
+                line = dict(color = '#000000'),
                 opacity = 0.8)
 
     data = [trace_bench, trace_porfolio]
