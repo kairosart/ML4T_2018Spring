@@ -3,10 +3,16 @@
 import pandas as pd
 import numpy as np
 import datetime as dt
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from analysis import get_portfolio_value, get_portfolio_stats, plot_normalized_data
 from util import get_data, normalize_data
 
+# Add plotly for interactive charts
+from plotly.offline import init_notebook_mode, iplot
+init_notebook_mode(connected=True)
+import plotly.plotly as py
+import plotly.graph_objs as go
+from plotly import tools
 
 def compute_portvals(df_orders, start_val=1000000, commission=9.95, impact=0.005):
     """
@@ -156,7 +162,8 @@ def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm,
     portvals = normalize_data(portvals)
     portvals_bm = normalize_data(portvals_bm)
     df = portvals_bm.join(portvals)
-
+    
+    '''
     # Plot the normalized benchmark and portfolio
     plt.plot(df.loc[:, "Benchmark"], label="Benchmark")
     plt.plot(df.loc[:, "Portfolio"], label="Portfolio")
@@ -181,3 +188,50 @@ def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm,
         plt.savefig(fig_name)
     else:
         plt.show()
+    '''    
+
+    trace_bench = go.Scatter(
+                x=df.index,
+                y=df.loc[:, "Benchmark"],
+                name = "Benchmark",
+                line = dict(color = '#17BECF'),
+                opacity = 0.8)
+
+    trace_porfolio = go.Scatter(
+                x=df.index,
+                y=df.loc[:, "Portfolio"],
+                name = "Portfolio",
+                line = dict(color = '#04B404'),
+                opacity = 0.8)
+
+    data = [trace_bench, trace_porfolio]
+
+    layout = dict(
+        title = "Portfolio vs Benchmark",
+        xaxis = dict(
+                title='Dates',
+                rangeselector=dict(
+                    buttons=list([
+                        dict(count=1,
+                            label='1m',
+                            step='month',
+                            stepmode='backward'),
+                        dict(count=6,
+                            label='6m',
+                            step='month',
+                            stepmode='backward'),
+                        dict(step='all')
+                    ])
+                ),
+                range = [portvals.index[0], portvals.index[-1]]),
+            
+        yaxis = dict(
+                title='Normalized Prices')
+                    
+        )
+        
+        
+
+    fig = dict(data=data, layout=layout)
+    iplot(fig)
+    
