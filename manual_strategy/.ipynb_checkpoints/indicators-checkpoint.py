@@ -7,6 +7,12 @@ import copy
 import datetime as dt
 from util import get_exchange_days, get_data, normalize_data
 
+# Add plotly for interactive charts
+from plotly.offline import init_notebook_mode, iplot
+init_notebook_mode(connected=True)
+import plotly.plotly as py
+import plotly.graph_objs as go
+from plotly import tools
 
 def get_momentum(price, window=5):
     """Calculate momentum indicator: 
@@ -22,16 +28,23 @@ def get_momentum(price, window=5):
     momentum.iloc[window:] = price.iloc[window:] / price.values[:-window] - 1
     return momentum
 
-def get_sma_indicator(price, rolling_mean):
-    """Calculate simple moving average indicator, i.e. price / rolling_mean.
+def get_sma_indicator(values, window):
+    """Return Simple moving average of given values, using specified window size."""
+    sma = pd.Series(values.rolling(window,center=False).mean()) 
+    q = (sma / values) - 1 
+    return sma, q
 
-    Parameters:
-    price: Price, typically adjusted close price, series of a symbol
-    rolling_mean: Rolling mean of a series
+def get_rolling_mean(values, window):
+    """Return rolling mean of given values, using specified window size."""
+    #values.rolling(window).mean
+    return values.rolling(window).mean()
 
-    Returns: The simple moving average indicator
-    """
-    return price / rolling_mean - 1
+
+def get_rolling_std(values, window):
+    """Return rolling standard deviation of given values, using specified window size."""
+    # todo: Compute and return rolling standard deviation
+    #return pd.rolling_std(values, window=window)
+    return values.rolling(window).std()
 
 def get_bollinger_bands(rolling_mean, rolling_std, num_std=2):
     """Calculate upper and lower Bollinger Bands.
@@ -109,60 +122,81 @@ def plot_momentum(sym_price, sym_mom, title="Momentum Indicator",
     plt.suptitle(title)
     plt.show()
 
-def plot_sma_indicator(sym_price, sma_indicator, rolling_mean, 
+def plot_sma_indicator(dates, df_index, sym_price, sma_indicator, sma_quality, 
                        title="SMA Indicator", fig_size=(12, 6)):
-    """Plot SMA indicator, price and rolling_mean for a symbol.
+    """Plot SMA indicator, price and SMA quality for a symbol.
 
     Parameters:
+    dates: Range of dates
+    df_index: Date index
     sym_price: Price, typically adjusted close price, series of symbol
     sma_indicator: The simple moving average indicator
-    rolling_mean (a.k.a SMA): Rolling mean of sym_price
+    sma_quality: SMA quality
     title: The chart title
     fig_size: Width and height of the chart in inches
 
     Returns:
-    Plot all the three series on the same plot with two scales
+    Plot all the three series on the same plot
     """
-    # Create two subplots on the same axes with different left and right scales
-    fig, ax1 = plt.subplots()
+    trace_symbol = go.Scatter(
+                x=df_index,
+                y=sym_price,
+                name = "JPM",
+                line = dict(color = '#17BECF'),
+                opacity = 0.8)
 
-    # The first subplot with the left scale: prices
-    ax1.grid(linestyle='--')
-    line1 = ax1.plot(sym_price.index, sym_price, label="Adjusted Close Price",
-                     color="b")
-    line2 = ax1.plot(rolling_mean.index, rolling_mean, label="SMA", color="g")
-    ax1.set_xlabel("Date")
-    # Make the y-axis label, ticks and tick labels match the line color
-    ax1.set_ylabel("Adjusted Close Price", color="b")
-    ax1.tick_params("y", colors="b")
+    trace_sma = go.Scatter(
+                x=df_index,
+                y=sma_indicator,
+                name = "SMA",
+                line = dict(color = '#FF8000'),
+                opacity = 0.8)
+        
+    trace_q = go.Scatter(
+                x=df_index,
+                y=sma_quality,
+                name = "SMA Quantity",
+                line = dict(color = '#04B404'),
+                opacity = 0.8)
+        
+    data = [trace_symbol, trace_sma, trace_q]
 
-    # The second subplot with the right scale: momentum
-    ax2 = ax1.twinx()
-    line3 = ax2.plot(sma_indicator.index, sma_indicator, 
-        label="SMA Indicator", color="k", alpha=0.4)
-    ax2.set_ylabel("SMA indicator", color="k")
-    ax2.tick_params("y", colors="k")
+    layout = dict(
+        title = title,
+        xaxis = dict(
+                title='Dates',
+                rangeselector=dict(
+                        buttons=list([
+                            dict(count=1,
+                                 label='1m',
+                                 step='month',
+                                 stepmode='backward'),
+                            dict(count=6,
+                                 label='6m',
+                                 step='month',
+                                 stepmode='backward'),
+                            dict(step='all')
+                        ])
+                ),
+                range = [dates.values[0], dates.values[1]]),
+            
+        yaxis = dict(
+                title='Price')
+                    
+        )
+        
+        
 
-    # Align gridlines for the two scales
-    align_y_axis(ax1, ax2, .1, .1)
+    fig = dict(data=data, layout=layout)
+    iplot(fig)
 
-    # Show legend with all labels on the same legend
-    lines = line1 + line2 + line3
-    line_labels = [l.get_label() for l in lines]
-    ax1.legend(lines, line_labels, loc="upper center")
-
-    #Set figure size
-    fig = plt.gcf()
-    fig.set_size_inches(fig_size)
-
-    plt.title(title)
-    plt.show()
-
-def plot_bollinger(sym_price, upper_band, lower_band, bollinger_val, 
+def plot_bollinger(dates, df_index, sym_price, upper_band, lower_band, bollinger_val, 
                    num_std=1, title="Bollinger Indicator", fig_size=(12, 6)):
     """Plot Bollinger bands and value for a symbol.
 
     Parameters:
+    dates: Range of dates
+    df_index: Date index
     sym_price: Price, typically adjusted close price, series of symbol
     upper_band: Bollinger upper band
     lower_band: Bollinger lower band
@@ -174,31 +208,64 @@ def plot_bollinger(sym_price, upper_band, lower_band, bollinger_val,
     Plot two subplots, one for the Adjusted Close Price and Bollinger bands,
     the other for the Bollinger value
     """
-    # Create 2 subplots
-    # Plot symbol's adjusted close price, rolling mean and Bollinger Bands
-    f, ax = plt.subplots(2, sharex=True)
-    ax[0].fill_between(upper_band.index, upper_band, lower_band, color="gray",
-                       alpha=0.4, linewidth=2.0,
-                       label="Region btwn Bollinger Bands")
-    ax[0].plot(sym_price, label="Adjusted Close Price", color="b")
-    ax[0].set_ylabel("Adjusted Close Price")
-    ax[0].legend(loc="upper center")
+    trace_symbol = go.Scatter(
+                x=df_index,
+                y=sym_price,
+                name = "JPM",
+                line = dict(color = '#17BECF'),
+                opacity = 0.8)
 
-    # Plot the bollinger value
-    ax[1].axhspan(-num_std, num_std, color="gray", alpha=0.4, linewidth=2.0,
-        label="Region btwn {} & {} std".format(-num_std, num_std))
-    ax[1].plot(bollinger_val, label="Bollinger Value", color="b")
-    ax[1].set_xlabel("Date")
-    ax[1].set_ylabel("Bollinger Value")
-    ax[1].set_xlim(bollinger_val.index.min(), bollinger_val.index.max())
-    ax[1].legend(loc="upper center")
+    trace_upper = go.Scatter(
+                x=df_index,
+                y=upper_band,
+                name = "Upper band",
+                line = dict(color = '#04B404'),
+                opacity = 0.8)
+        
+    trace_lower = go.Scatter(
+                x=df_index,
+                y=lower_band,
+                name = "Lower band",
+                line = dict(color = '#FF0000'),
+                opacity = 0.8)
+        
+    trace_Rolling = go.Scatter(
+                x=df_index,
+                y=bollinger_val,
+                name = "Rolling Mean",
+                line = dict(color = '#FF8000'),
+                opacity = 0.8)
+        
+    data = [trace_symbol, trace_upper, trace_lower, trace_Rolling]
 
-    #Set figure size
-    fig = plt.gcf()
-    fig.set_size_inches(fig_size)
+    layout = dict(
+        title = title,
+        xaxis = dict(
+                    title='Dates',
+                    rangeselector=dict(
+                        buttons=list([
+                            dict(count=1,
+                                 label='1m',
+                                 step='month',
+                                 stepmode='backward'),
+                            dict(count=6,
+                                 label='6m',
+                                 step='month',
+                                 stepmode='backward'),
+                            dict(step='all')
+                        ])
+                    ),
+                    range = [dates.values[0], dates.values[1]]),
+            
+        yaxis = dict(
+                    title='Price')
+                    
+        )
+        
+        
 
-    plt.suptitle(title)
-    plt.show()
+    fig = dict(data=data, layout=layout)
+    iplot(fig)    
 
 def align_y_axis(ax1, ax2, minresax1, minresax2):
     """Set tick marks of twinx axes to line up with 7 total tick marks.
