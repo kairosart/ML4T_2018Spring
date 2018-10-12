@@ -205,8 +205,7 @@ def plot_bollinger(dates, df_index, sym_price, upper_band, lower_band, bollinger
     fig_size: Width and height of the chart in inches
 
     Returns:
-    Plot two subplots, one for the Adjusted Close Price and Bollinger bands,
-    the other for the Bollinger value
+    Plot Bollinger bands and Bollinger value
     """
     trace_symbol = go.Scatter(
                 x=df_index,
@@ -267,6 +266,78 @@ def plot_bollinger(dates, df_index, sym_price, upper_band, lower_band, bollinger
     fig = dict(data=data, layout=layout)
     iplot(fig)    
 
+def plot_rsi_indicator(dates, df_index, sym_price, rsi_indicator, window=14, 
+                       title="RSI Indicator", fig_size=(12, 6)):
+    """Plot Relative Strength Index (RSI) of given values, using specified window size."""  
+    '''
+    Parameters:
+    dates: Range of dates
+    df_index: Date index
+    sym_price: Price series of symbol
+    rsi_indicator: RSI indicator
+    window: Window size
+    title: The chart title
+    fig_size: Width and height of the chart in inches
+
+    Returns:
+    Plot price, RSI, Overbought line and Oversold line
+    '''
+    
+    # Price line
+    trace_symbol = go.Scatter(
+                x=df_index,
+                y=sym_price,
+                name = "JPM",
+                line = dict(color = '#17BECF'),
+                opacity = 0.8)
+
+    # RSI line
+    trace_rsi = go.Scatter(
+                x=df_index,
+                y=rsi_indicator,
+                name = "RSI",
+                line = dict(color = '#FF8000'),
+                opacity = 0.8)
+
+    # Overbought line
+    trace_ob = go.Scatter(
+                x=df_index,
+                y=np.repeat(70, len(df_index)),
+                name = "Overbought",
+                line = dict(color = '#04B404',
+                           dash = 'dash')
+                )
+    # Oversold line
+    trace_os = go.Scatter(
+                x=df_index,
+                y=np.repeat(30, len(df_index)),
+                name = "Oversold",
+                line = dict(color = '#FF0000',
+                           dash = 'dash')
+                )
+
+
+    # Subplots
+    fig = tools.make_subplots(rows=2, cols=1, subplot_titles=('JPM Prices', 'Relative Strength Index (RSI)'))
+    fig.append_trace(trace_symbol, 1, 1)
+    fig.append_trace(trace_ob, 2, 1)
+    fig.append_trace(trace_os, 2, 1)
+    fig.append_trace(trace_rsi, 2, 1)
+    layout = dict(
+        xaxis = dict(
+                    title='Dates',
+                    range = [dates.values[0], dates.values[1]]),
+
+        yaxis = dict(
+                    title='Price')
+
+        )
+
+
+
+    fig['layout'].update(height=600, title='Overbought-Oversold')
+    iplot(fig)
+    
 def align_y_axis(ax1, ax2, minresax1, minresax2):
     """Set tick marks of twinx axes to line up with 7 total tick marks.
 
