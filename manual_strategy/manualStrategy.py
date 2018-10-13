@@ -5,7 +5,7 @@ import pandas as pd
 import datetime as dt
 from util import get_data
 from marketsim import market_simulator
-from indicators import get_momentum, get_sma_indicator, get_bollinger_bands, \
+from indicators import get_momentum, get_sma_indicator, get_bollinger_bands, get_rolling_mean,get_rolling_std, get_bollinger_bands, get_RSI, \
 compute_bollinger_value, plot_momentum, plot_sma_indicator, plot_bollinger
 
 
@@ -29,18 +29,36 @@ class RuleBasedStrategy(object):
         df_order_signals: A series that contains 1 for buy, 0 for hold and -1 for sell
         """
 
-        # Get SMA indicator and generate signals
-        sma_indicator = get_sma_indicator(sym_price, sym_price.rolling(window=30).mean())
-        sma_signal = 1 * (sma_indicator < 0.0) + -1 * (sma_indicator > 0.0)
+        # Get Bollinger indicator and generate signals
+        # Compute Bollinger Bands
+        # 1. Compute rolling mean
+        rm_JPM = get_rolling_mean(sym_price, window=10)
+
+        # 2. Compute rolling standard deviation
+        rstd_JPM = get_rolling_std(sym_price, window=10)
+
+        # 3. Compute upper and lower bands
+        upper_band, lower_band = get_bollinger_bands(rm_JPM, rstd_JPM)
+        bollinger_signal = 1 * (sym_price < lower_band) + -1 * (sym_price > upper_band)
         
+        # Get SMA indicator and generate signals
+        sma_indicator, q = get_sma_indicator(sym_price, window=10)
+        sma_signal = 1 * (q < 0.0) + -1 * (q > 0.0)
+
+        # Get RSI indicator and generate signals
+        rsi_indicator = get_RSI(sym_price)
+        rsi_signal = 1 * (rsi_indicator < 0.3) + -1 * (rsi_indicator > 0.7)
+        print("RSI Signal:", rsi_signal)
+        pass        
         # Get momentum indicator and generate signals
-        momentum = get_momentum(sym_price, 40)
-        mom_signal = -1 * (momentum < -0.07) + 1 * (momentum > 0.14)
+        #momentum = get_momentum(sym_price, 10)
+        #mom_signal = -1 * (momentum < -0.07) + 1 * (momentum > 0.14)
         
         # Combine individual signals
-        signal = 1 * ((sma_signal == 1) & (mom_signal == 1)) \
-            + -1 * ((sma_signal == -1) & (mom_signal == -1))
-
+        signal = 1 * ((sma_signal == 1) & (bollinger_signal == 1)) \
+            + -1 * ((sma_signal == -1) & (bollinger_signal == -1))
+        print("Signal:", signal)
+        pass
         # Create an order series with 0 as default values
         self.df_order_signals = signal * 0
 
@@ -80,7 +98,6 @@ class RuleBasedStrategy(object):
         df_trades: A dataframe whose values represent trades for each day: +1000 indicating a
         BUY of 1000 shares, -1000 indicating a SELL of 1000 shares, and 0 indicating NOTHING
         """
-        
         # Get stock data
         df_price = get_data([symbol], pd.date_range(start_date, end_date)).dropna()
         sym_price = df_price.iloc[:, 1]

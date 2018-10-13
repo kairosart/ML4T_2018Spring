@@ -76,6 +76,21 @@ def compute_bollinger_value(price, rolling_mean, rolling_std):
     bollinger_val = (price - rolling_mean) / rolling_std
     return bollinger_val
 
+
+def get_RSI(price, n=14):
+    """Return Relative Strength Index (RSI) of given values, using specified window size."""
+    gain = (price-price.shift(1)).fillna(0) # calculate price gain with previous day, first row nan is filled with 0
+
+    def rsiCalc(p):
+        # subfunction for calculating rsi for one lookback period
+        avgGain = p[p>0].sum()/n
+        avgLoss = -p[p<0].sum()/n 
+        rs = avgGain/avgLoss
+        return 100 - 100/(1+rs)
+
+    # run for all periods with rolling_apply
+    return pd.rolling_apply(gain,n,rsiCalc)  
+
 def plot_momentum(sym_price, sym_mom, title="Momentum Indicator",
                   fig_size=(12, 6)):
     """Plot momentum and prices for a symbol.
