@@ -39,7 +39,7 @@ class RuleBasedStrategy(object):
 
         # 3. Compute upper and lower bands
         upper_band, lower_band = get_bollinger_bands(rm_JPM, rstd_JPM)
-        bollinger_signal = 1 * (sym_price < lower_band) + -1 * (sym_price > upper_band)
+        bollinger_signal = -1 * (sym_price < lower_band) + 1 * (sym_price > upper_band)
         
         # Get SMA indicator and generate signals
         sma_indicator, q = get_sma_indicator(sym_price, window=10)
@@ -48,17 +48,15 @@ class RuleBasedStrategy(object):
         # Get RSI indicator and generate signals
         rsi_indicator = get_RSI(sym_price)
         rsi_signal = 1 * (rsi_indicator < 0.3) + -1 * (rsi_indicator > 0.7)
-        print("RSI Signal:", rsi_signal)
-        pass        
+       
         # Get momentum indicator and generate signals
         #momentum = get_momentum(sym_price, 10)
         #mom_signal = -1 * (momentum < -0.07) + 1 * (momentum > 0.14)
         
         # Combine individual signals
-        signal = 1 * ((sma_signal == 1) & (bollinger_signal == 1)) \
-            + -1 * ((sma_signal == -1) & (bollinger_signal == -1))
-        print("Signal:", signal)
-        pass
+        signal = 1 * ((sma_signal == 1) & (rsi_signal == 1) & (bollinger_signal == 1)) \
+            + -1 * ((sma_signal == -1) & (rsi_signal == -1) & (bollinger_signal == -1))
+
         # Create an order series with 0 as default values
         self.df_order_signals = signal * 0
 
