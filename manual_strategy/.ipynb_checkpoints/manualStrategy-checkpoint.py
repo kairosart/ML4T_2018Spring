@@ -44,8 +44,8 @@ class RuleBasedStrategy(object):
 
         # Get RSI indicator and generate signals
         rsi_indicator = get_RSI(sym_price)
-        rsi_signal = 1 * (rsi_indicator <= 0.3) + -1 * (rsi_indicator >= 0.7)
-       
+        rsi_signal = 1 * (rsi_indicator < 50) + -1 * (rsi_indicator > 50)
+        
         # Get SMA indicator and generate signals
         sma_indicator = get_sma_indicator(sym_price, sym_price.rolling(window=30).mean())
         sma_signal = 1 * (sma_indicator < 0.0) + -1 * (sma_indicator > 0.0)
@@ -55,12 +55,12 @@ class RuleBasedStrategy(object):
         mom_signal = -1 * (momentum < -0.07) + 1 * (momentum > 0.14)
         
         # Combine individual signals
-        signal = 1 * ((sma_signal == 1) & (rsi_signal == 1)) \
-            + -1 * ((sma_signal == -1) & (rsi_signal == -1))
+        #signal = 1 * ((sma_signal == 1) & (mom_signal == 1)) \
+        #    + -1 * ((sma_signal == -1) & (mom_signal == -1))
         
         # Combine individual signals
-        #signal = 1 * ((sma_signal == 1) & (rsi_signal == 1) & (bollinger_signal == 1)) \
-        #    + -1 * ((sma_signal == -1) & (rsi_signal == -1) & (bollinger_signal == -1))
+        signal = 1 * ((sma_signal == 1) & (rsi_signal == 1) & (mom_signal == 1)) \
+            + -1 * ((sma_signal == -1) & (rsi_signal == -1) & (mom_signal == -1))
 
         # Create an order series with 0 as default values
         self.df_order_signals = signal * 0
