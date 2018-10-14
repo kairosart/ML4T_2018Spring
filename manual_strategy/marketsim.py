@@ -87,7 +87,6 @@ def market_simulator(df_orders, df_orders_benchmark, start_val=1000000, commissi
     impact=0.005, daily_rf=0.0, samples_per_year=252.0, save_fig=False, fig_name="plot.png"):
     """
     This function takes in and executes trades from orders dataframes
-
     Parameters:
     df_orders: A dataframe that contains portfolio orders
     df_orders_benchmark: A dataframe that contains benchmark orders
@@ -98,12 +97,10 @@ def market_simulator(df_orders, df_orders_benchmark, start_val=1000000, commissi
     samples_per_year: Sampling frequency per year
     save_fig: Whether to save the plot or not
     fig_name: The name of the saved figure
-
     Returns:
     Print out final portfolio value of the portfolio, as well as Sharpe ratio, 
     cumulative return, average daily return and standard deviation of the portfolio and Benchmark.
     Plot a chart of the portfolio and benchmark performances
-
     """
     
     # Process portfolio orders
@@ -123,9 +120,9 @@ def market_simulator(df_orders, df_orders_benchmark, start_val=1000000, commissi
      daily_rf=daily_rf, samples_per_year=samples_per_year)
 
     # Compare portfolio against Benchmark
-    #print ("Sharpe Ratio of Portfolio: {}".format(sharpe_ratio))
-    #print ("Sharpe Ratio of Benchmark : {}".format(sharpe_ratio_bm))
-    #print ()
+    print ("Sharpe Ratio of Portfolio: {}".format(sharpe_ratio))
+    print ("Sharpe Ratio of Benchmark : {}".format(sharpe_ratio_bm))
+    print ()
     print ("Cumulative Return of Portfolio: {}".format(cum_ret))
     print ("Cumulative Return of Benchmark : {}".format(cum_ret_bm))
     print ()
@@ -135,15 +132,14 @@ def market_simulator(df_orders, df_orders_benchmark, start_val=1000000, commissi
     print ("Average Daily Return of Portfolio: {}".format(avg_daily_ret))
     print ("Average Daily Return of Benchmark : {}".format(avg_daily_ret_bm))
     print ()
-    #print ("Final Portfolio Value: {}".format(portvals.iloc[-1, -1]))
-    #print ("Final Benchmark Value: {}".format(portvals_bm.iloc[-1, -1]))
-
+    print ("Final Portfolio Value: {}".format(portvals.iloc[-1, -1]))
+    print ("Final Benchmark Value: {}".format(portvals_bm.iloc[-1, -1]))
+    
     # Rename columns and normalize data to the first date of the date range
     portvals.rename(columns={"port_val": "Portfolio"}, inplace=True)
     portvals_bm.rename(columns={"port_val": "Benchmark"}, inplace=True)
     plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm,
-        save_fig=False, fig_name="plot.png")
-
+    save_fig=False, fig_name="plot.png")
 
 def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, 
     save_fig=False, fig_name="plot.png"):

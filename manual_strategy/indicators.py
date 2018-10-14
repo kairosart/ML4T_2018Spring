@@ -17,7 +17,6 @@ from plotly import tools
 def get_momentum(price, window=5):
     """Calculate momentum indicator: 
     momentum[t] = (price[t]/price[t-window]) - 1
-
     Parameters:
     price: Price, typically adjusted close price, series of a symbol
     window: Number of days to look back
@@ -28,7 +27,16 @@ def get_momentum(price, window=5):
     momentum.iloc[window:] = price.iloc[window:] / price.values[:-window] - 1
     return momentum
 
-def get_sma_indicator(values, window):
+def get_sma_indicator(price, rolling_mean):
+    """Calculate simple moving average indicator, i.e. price / rolling_mean.
+    Parameters:
+    price: Price, typically adjusted close price, series of a symbol
+    rolling_mean: Rolling mean of a series
+    Returns: The simple moving average indicator
+    """
+    return price / rolling_mean - 1
+
+def get_sma(values, window):
     """Return Simple moving average of given values, using specified window size."""
     sma = pd.Series(values.rolling(window,center=False).mean()) 
     q = (sma / values) - 1 
