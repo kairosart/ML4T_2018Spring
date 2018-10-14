@@ -339,6 +339,14 @@ def plot_rsi_indicator(dates, df_index, sym_price, rsi_indicator, window=14,
                            dash = 'dash')
                 )
 
+    # Signal line
+    trace_signal = go.Scatter(
+                x=df_index,
+                y=np.repeat(50, len(df_index)),
+                name = "Signal line",
+                line = dict(color = '#000000',
+                           dash = 'dot')
+                )
 
     # Subplots
     fig = tools.make_subplots(rows=2, cols=1, subplot_titles=('JPM Prices', 'Relative Strength Index (RSI)'))
@@ -346,6 +354,7 @@ def plot_rsi_indicator(dates, df_index, sym_price, rsi_indicator, window=14,
     fig.append_trace(trace_ob, 2, 1)
     fig.append_trace(trace_os, 2, 1)
     fig.append_trace(trace_rsi, 2, 1)
+    fig.append_trace(trace_signal, 2, 1)
     layout = dict(
         xaxis = dict(
                     title='Dates',
