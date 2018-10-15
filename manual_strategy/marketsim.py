@@ -84,7 +84,7 @@ def compute_portvals(df_orders, start_val=1000000, commission=9.95, impact=0.005
 
 
 def market_simulator(df_orders, df_orders_benchmark, start_val=1000000, commission=9.95, 
-    impact=0.005, daily_rf=0.0, samples_per_year=252.0, save_fig=False, fig_name="plot.png"):
+    impact=0.005, daily_rf=0.0, samples_per_year=252.0, vertical_lines=False):
     """
     This function takes in and executes trades from orders dataframes
     Parameters:
@@ -95,8 +95,8 @@ def market_simulator(df_orders, df_orders_benchmark, start_val=1000000, commissi
     impact: The amount the price moves against the trader compared to the historical data at each transaction
     daily_rf: Daily risk-free rate, assuming it does not change
     samples_per_year: Sampling frequency per year
-    save_fig: Whether to save the plot or not
-    fig_name: The name of the saved figure
+    vertical_lines: Showing vertical lines for buy and sell orders
+    
     Returns:
     Print out final portfolio value of the portfolio, as well as Sharpe ratio, 
     cumulative return, average daily return and standard deviation of the portfolio and Benchmark.
@@ -138,12 +138,10 @@ def market_simulator(df_orders, df_orders_benchmark, start_val=1000000, commissi
     # Rename columns and normalize data to the first date of the date range
     portvals.rename(columns={"port_val": "Portfolio"}, inplace=True)
     portvals_bm.rename(columns={"port_val": "Benchmark"}, inplace=True)
-    plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm,
-    save_fig=False, fig_name="plot.png")
+    plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vertical_lines)
 
-def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, 
-    save_fig=False, fig_name="plot.png"):
-    """Plots portvals and portvals_bm, showing vertical lines for buy and sell orderss
+def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vert_lines=False):
+    """Plots portvals and portvals_bm, showing vertical lines for buy and sell orders
     
     Parameters:
     df_orders: A dataframe that contains portfolio orders
@@ -158,34 +156,9 @@ def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm,
     portvals = normalize_data(portvals)
     portvals_bm = normalize_data(portvals_bm)
     df = portvals_bm.join(portvals)
+  
     
-    '''
-    # Plot the normalized benchmark and portfolio
-    plt.plot(df.loc[:, "Benchmark"], label="Benchmark")
-    plt.plot(df.loc[:, "Portfolio"], label="Portfolio")
-
-    # Plot the vertical lines for buy and sell signals
-    for date in df_orders.index:
-        if df_orders.loc[date, "Order"] == "BUY":
-            plt.axvline(date, color = 'g', linestyle = '--')
-        else:
-            plt.axvline(date, color = 'r', linestyle = '--')
-
-    plt.title("Portfolio vs. Benchmark")
-    plt.xlabel("Date")
-    plt.ylabel("Normalized prices")
-    plt.legend()
-
-    # Set figure size
-    fig = plt.gcf()
-    fig.set_size_inches(12, 6)
-
-    if save_fig == True:
-        plt.savefig(fig_name)
-    else:
-        plt.show()
-    '''    
-
+    # Plot the normalized benchmark and portfolio        
     trace_bench = go.Scatter(
                 x=df.index,
                 y=df.loc[:, "Benchmark"],
@@ -201,8 +174,54 @@ def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm,
                 opacity = 0.8)
 
     data = [trace_bench, trace_porfolio]
+    
+    
+    # Plot the vertical lines for buy and sell signals
+    shapes = list()
+    if vert_lines:
+        buy_line = []
+        sell_line = []
+        for date in df_orders.index:
+            if df_orders.loc[date, "Order"] == "BUY":
+                buy_line.append(date)
+            else:
+                sell_line.append(date)
+        # Vertical lines
+        line_size = df.loc[:, "Portfolio"].max()
 
+        # Buy line
+        for i in buy_line:
+            shapes.append({'type': 'line',
+                           'xref': 'x',
+                           'yref': 'y',
+                           'x0': i,
+                           'y0': 0,
+                           'x1': i,
+                           'y1': line_size,
+                           'line': {
+                                'color': 'rgb(0, 102, 34)',
+                                'width': 1,
+                                'dash': 'dash',
+                            },
+                          })
+        # Sell line
+        for i in sell_line:
+            shapes.append({'type': 'line',
+                           'xref': 'x',
+                           'yref': 'y',
+                           'x0': i,
+                           'y0': 0,
+                           'x1': i,
+                           'y1': line_size,
+                           'line': {
+                                'color': 'rgb(255, 0, 0)',
+                                'width': 1,
+                                'dash': 'dash',
+                            },
+                          })
+    
     layout = dict(
+        shapes=shapes,
         title = "Portfolio vs Benchmark",
         xaxis = dict(
                 title='Dates',

@@ -134,6 +134,7 @@ def plot_momentum(dates, df_index, sym_price, sym_mom, title="Momentum Indicator
 
     layout = dict(
         title = title,
+        
         xaxis = dict(
                 title='Dates',
                 rangeselector=dict(
