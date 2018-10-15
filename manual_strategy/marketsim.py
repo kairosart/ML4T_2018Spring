@@ -200,7 +200,7 @@ def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vert_lines=F
             else:
                 sell_line.append(date)
         # Vertical lines
-        line_size = df.loc[:, "Portfolio"].max()
+        line_size = max_range + (max_range * 10 / 100)
 
         # Buy line
         for i in buy_line:
@@ -234,7 +234,15 @@ def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vert_lines=F
                           })
     
     layout = dict(
+        autosize=True,
         shapes=shapes,
+        margin=go.Margin(
+            l=50,
+            r=50,
+            b=100,
+            t=100,
+            pad=4
+        ),
         title = "Portfolio vs Benchmark",
         xaxis = dict(
                 title='Dates',
@@ -255,7 +263,7 @@ def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vert_lines=F
             
         yaxis = dict(
                 title='Normalized Prices',
-                range = [min_range,max_range]),
+                range = [min_range - (min_range * 10 / 100) ,max_range + (max_range * 10 / 100)]),
                     
         )
         
