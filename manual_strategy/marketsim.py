@@ -157,7 +157,18 @@ def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vert_lines=F
     portvals_bm = normalize_data(portvals_bm)
     df = portvals_bm.join(portvals)
   
-    
+    # Min range
+    if (df.loc[:, "Benchmark"].min() < df.loc[:, "Portfolio"].min()):
+        min_range = df.loc[:, "Benchmark"].min()
+    else:
+        min_range = df.loc[:, "Portfolio"].min()
+        
+    # Max range    
+    if (df.loc[:, "Benchmark"].max() > df.loc[:, "Portfolio"].max()):
+        max_range = df.loc[:, "Benchmark"].max()
+    else:
+        max_range = df.loc[:, "Portfolio"].max()  
+        
     # Plot the normalized benchmark and portfolio        
     trace_bench = go.Scatter(
                 x=df.index,
@@ -175,6 +186,8 @@ def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vert_lines=F
 
     data = [trace_bench, trace_porfolio]
     
+    
+
     
     # Plot the vertical lines for buy and sell signals
     shapes = list()
@@ -241,9 +254,12 @@ def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vert_lines=F
                 range = [portvals.index[0], portvals.index[-1]]),
             
         yaxis = dict(
-                title='Normalized Prices')
+                title='Normalized Prices',
+                range = [min_range,max_range]),
                     
         )
+        
+    
         
         
 
