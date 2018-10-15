@@ -17,7 +17,6 @@ from plotly import tools
 def get_momentum(price, window=5):
     """Calculate momentum indicator: 
     momentum[t] = (price[t]/price[t-window]) - 1
-
     Parameters:
     price: Price, typically adjusted close price, series of a symbol
     window: Number of days to look back
@@ -28,7 +27,16 @@ def get_momentum(price, window=5):
     momentum.iloc[window:] = price.iloc[window:] / price.values[:-window] - 1
     return momentum
 
-def get_sma_indicator(values, window):
+def get_sma_indicator(price, rolling_mean):
+    """Calculate simple moving average indicator, i.e. price / rolling_mean.
+    Parameters:
+    price: Price, typically adjusted close price, series of a symbol
+    rolling_mean: Rolling mean of a series
+    Returns: The simple moving average indicator
+    """
+    return price / rolling_mean - 1
+
+def get_sma(values, window):
     """Return Simple moving average of given values, using specified window size."""
     sma = pd.Series(values.rolling(window,center=False).mean()) 
     q = (sma / values) - 1 
@@ -91,11 +99,14 @@ def get_RSI(price, n=14):
     # run for all periods with rolling_apply
     return pd.rolling_apply(gain,n,rsiCalc)  
 
-def plot_momentum(sym_price, sym_mom, title="Momentum Indicator",
+
+def plot_momentum(dates, df_index, sym_price, sym_mom, title="Momentum Indicator",
                   fig_size=(12, 6)):
     """Plot momentum and prices for a symbol.
 
     Parameters:
+    dates: Range of dates
+    df_index: Date index
     sym_price: Price, typically adjusted close price, series of symbol
     sym_mom: Momentum of symbol
     fig_size: Width and height of the chart in inches
@@ -103,39 +114,59 @@ def plot_momentum(sym_price, sym_mom, title="Momentum Indicator",
     Returns:
     Plot momentum and prices on the sample plot with two scales
     """
-    # Create two subplots on the same axes with different left and right scales
-    fig, ax1 = plt.subplots()
+    trace_symbol = go.Scatter(
+                x=df_index,
+                y=sym_price,
+                name = "JPM",
+                line = dict(color = '#17BECF'),
+                opacity = 0.8)
 
-    # The first subplot with the left scale: prices
-    ax1.grid(linestyle='--')
-    line1 = ax1.plot(sym_price.index, sym_price, label="Adjusted Close Price",
-                     color="b")
-    ax1.set_xlabel("Date")
-    # Make the y-axis label, ticks and tick labels match the line color
-    ax1.set_ylabel("Adjusted Close Price", color="b")
-    ax1.tick_params("y", colors="b")
+    trace_momentum = go.Scatter(
+                x=df_index,
+                y=sym_mom,
+                name = "Momentum",
+                yaxis='y2',
+                line = dict(color = '#FF8000'),
+                opacity = 0.8)
+        
 
-    # The second subplot with the right scale: momentum
-    ax2 = ax1.twinx()
-    line2 = ax2.plot(sym_mom.index, sym_mom, label="Momentum", color="k",
-                     alpha=0.4)
-    ax2.set_ylabel("Momentum", color="k")
-    ax2.tick_params("y", colors="k")
+    data = [trace_symbol, trace_momentum]
 
-    # Align gridlines for the two scales
-    align_y_axis(ax1, ax2, .1, .1)
+    layout = dict(
+        title = title,
+        xaxis = dict(
+                title='Dates',
+                rangeselector=dict(
+                        buttons=list([
+                            dict(count=1,
+                                 label='1m',
+                                 step='month',
+                                 stepmode='backward'),
+                            dict(count=6,
+                                 label='6m',
+                                 step='month',
+                                 stepmode='backward'),
+                            dict(step='all')
+                        ])
+                ),
+                range = [dates.values[0], dates.values[1]]),
+            
+        yaxis = dict(
+                title='Adjusted Closed Price'
+                ),
+                    
+        yaxis2=dict(
+                title='M. Quantitative',
+                overlaying='y',
+                side='right'
+                )
+    )
+        
+        
+        
 
-    # Show legend with all labels on the same legend
-    lines = line1 + line2
-    line_labels = [l.get_label() for l in lines]
-    ax1.legend(lines, line_labels, loc="upper center")
-
-    #Set figure size
-    fig = plt.gcf()
-    fig.set_size_inches(fig_size)
-
-    plt.suptitle(title)
-    plt.show()
+    fig = dict(data=data, layout=layout)
+    iplot(fig)
 
 def plot_sma_indicator(dates, df_index, sym_price, sma_indicator, sma_quality, 
                        title="SMA Indicator", fig_size=(12, 6)):
@@ -331,6 +362,14 @@ def plot_rsi_indicator(dates, df_index, sym_price, rsi_indicator, window=14,
                            dash = 'dash')
                 )
 
+    # Signal line
+    trace_signal = go.Scatter(
+                x=df_index,
+                y=np.repeat(50, len(df_index)),
+                name = "Signal line",
+                line = dict(color = '#000000',
+                           dash = 'dot')
+                )
 
     # Subplots
     fig = tools.make_subplots(rows=2, cols=1, subplot_titles=('JPM Prices', 'Relative Strength Index (RSI)'))
@@ -338,6 +377,7 @@ def plot_rsi_indicator(dates, df_index, sym_price, rsi_indicator, window=14,
     fig.append_trace(trace_ob, 2, 1)
     fig.append_trace(trace_os, 2, 1)
     fig.append_trace(trace_rsi, 2, 1)
+    fig.append_trace(trace_signal, 2, 1)
     layout = dict(
         xaxis = dict(
                     title='Dates',
