@@ -393,6 +393,36 @@ def plot_rsi_indicator(dates, df_index, sym_price, rsi_indicator, window=14,
 
     fig['layout'].update(height=600, title='Overbought-Oversold')
     iplot(fig)
+
+    
+def plot_performance(perform_df, title="In-sample vs Out of sample performance",
+                  fig_size=(12, 6)):
+    """Plot In-sample and Out of sample performances.
+
+    Parameters:
+    perform_df: Performance dataframe
+    title: Chart title
+    fig_size: Width and height of the chart in inches
+    
+    Returns:
+    Plot In-sample and Out of sample performances.
+    """
+    trace1 = go.Bar(
+        x=perform_df.index
+        y=perform_df.loc['Sharpe Ratio'][0],
+        name='Sharpe Ratio'
+    )
+   
+
+    data = [trace1]
+    layout = go.Layout(
+        barmode='group'
+    )
+        
+        
+
+    fig = dict(data=data, layout=layout)
+    iplot(fig)    
     
 def align_y_axis(ax1, ax2, minresax1, minresax2):
     """Set tick marks of twinx axes to line up with 7 total tick marks.
