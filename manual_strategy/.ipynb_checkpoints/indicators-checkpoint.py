@@ -408,13 +408,17 @@ def plot_performance(perform_df, title="In-sample vs Out of sample performance",
     Plot In-sample and Out of sample performances.
     """
     trace1 = go.Bar(
-        x=perform_df.index
-        y=perform_df.loc['Sharpe Ratio'][0],
+        x=perform_df.index,
+        y=perform_df['In-sample'].values,
         name='Sharpe Ratio'
     )
    
-
-    data = [trace1]
+    trace2 = go.Bar(
+        x=perform_df.index,
+        y=perform_df['Out of sample'].values,
+        name='Sharpe Ratio'
+    )
+    data = [trace1, trace2]
     layout = go.Layout(
         barmode='group'
     )
