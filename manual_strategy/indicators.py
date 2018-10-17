@@ -373,7 +373,8 @@ def plot_rsi_indicator(dates, df_index, sym_price, rsi_indicator, window=14,
                 )
 
     # Subplots
-    fig = tools.make_subplots(rows=2, cols=1, subplot_titles=('JPM Prices', 'Relative Strength Index (RSI)'))
+    fig = tools.make_subplots(rows=2, cols=1, print_grid=False,
+                              subplot_titles=('JPM Prices', 'Relative Strength Index (RSI)'))
     fig.append_trace(trace_symbol, 1, 1)
     fig.append_trace(trace_ob, 2, 1)
     fig.append_trace(trace_os, 2, 1)
@@ -456,7 +457,7 @@ def plot_performance(perform_df, title="In-sample vs Out of sample performance",
     )
     
     # Subplots
-    fig = tools.make_subplots(rows=2, cols=2, title=title)
+    fig = tools.make_subplots(rows=2, cols=2, print_grid=False)
     # Sharpe ratio
     fig.append_trace(trace1, 1, 1)
     fig.append_trace(trace2, 1, 1)
@@ -477,7 +478,7 @@ def plot_performance(perform_df, title="In-sample vs Out of sample performance",
         barmode='group'
     )
         
-        
+    fig['layout'].update(height=600, width=600, title=title)    
 
     iplot(fig)    
     
