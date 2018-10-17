@@ -456,8 +456,21 @@ def plot_performance(perform_df, title="In-sample vs Out of sample performance",
         name='Out of sample'
     )
     
+    trace9 = go.Bar(
+        x=['Final Portfolio Value'],
+        y=perform_df.loc['Final Portfolio Value', ['In-sample']],
+        name='In-sample'
+    )
+   
+    trace10 = go.Bar(
+        x=['Final Portfolio Value'],
+        y=perform_df.loc['Final Portfolio Value', ['Out of sample']],
+        name='Out of sample'
+    )
+    
     # Subplots
-    fig = tools.make_subplots(rows=2, cols=2, print_grid=False)
+    fig = tools.make_subplots(rows=3, cols=2, print_grid=False, 
+                        specs=[[{}, {}], [{}, {}], [{'colspan': 2}, None]])
     # Sharpe ratio
     fig.append_trace(trace1, 1, 1)
     fig.append_trace(trace2, 1, 1)
@@ -474,6 +487,10 @@ def plot_performance(perform_df, title="In-sample vs Out of sample performance",
     fig.append_trace(trace7, 2, 2)
     fig.append_trace(trace8, 2, 2)    
 
+    # Final Portfolio Value
+    fig.append_trace(trace9, 3, 1)
+    fig.append_trace(trace10, 3, 1) 
+    
     layout = go.Layout(
         barmode='group'
     )
