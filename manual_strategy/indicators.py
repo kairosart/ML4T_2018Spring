@@ -408,24 +408,77 @@ def plot_performance(perform_df, title="In-sample vs Out of sample performance",
     Plot In-sample and Out of sample performances.
     """
     trace1 = go.Bar(
-        x=perform_df.index,
-        y=perform_df['In-sample'].values,
+        x=['Sharpe Ratio'],
+        y=perform_df.loc['Sharpe Ratio', ['In-sample']],
         name='In-sample'
     )
    
     trace2 = go.Bar(
-        x=perform_df.index,
-        y=perform_df['Out of sample'].values,
+        x=['Sharpe Ratio'],
+        y=perform_df.loc['Sharpe Ratio', ['Out of sample']],
         name='Out of sample'
     )
-    data = [trace1, trace2]
+    
+    trace3 = go.Bar(
+        x=['Cum. Return'],
+        y=perform_df.loc['Cumulative Return', ['In-sample']],
+        name='In-sample'
+    )
+   
+    trace4 = go.Bar(
+        x=['Cum. Return'],
+        y=perform_df.loc['Cumulative Return', ['Out of sample']],
+        name='Out of sample'
+    )
+    
+    trace5 = go.Bar(
+        x=['Standard Deviation'],
+        y=perform_df.loc['Standard Deviation', ['In-sample']],
+        name='In-sample'
+    )
+   
+    trace6 = go.Bar(
+        x=['Standard Deviation'],
+        y=perform_df.loc['Standard Deviation', ['Out of sample']],
+        name='Out of sample'
+    )
+    
+    trace7 = go.Bar(
+        x=['Average Daily Return'],
+        y=perform_df.loc['Average Daily Return', ['In-sample']],
+        name='In-sample'
+    )
+   
+    trace8 = go.Bar(
+        x=['Average Daily Return'],
+        y=perform_df.loc['Average Daily Return', ['Out of sample']],
+        name='Out of sample'
+    )
+    
+    # Subplots
+    fig = tools.make_subplots(rows=2, cols=2, title=title)
+    # Sharpe ratio
+    fig.append_trace(trace1, 1, 1)
+    fig.append_trace(trace2, 1, 1)
+    
+    # Cumulative return
+    fig.append_trace(trace3, 1, 2)
+    fig.append_trace(trace4, 1, 2)
+    
+    # Standard Deviation
+    fig.append_trace(trace5, 2, 1)
+    fig.append_trace(trace6, 2, 1)
+    
+    # Average Daily Return
+    fig.append_trace(trace7, 2, 2)
+    fig.append_trace(trace8, 2, 2)    
+
     layout = go.Layout(
         barmode='group'
     )
         
         
 
-    fig = dict(data=data, layout=layout)
     iplot(fig)    
     
 def align_y_axis(ax1, ax2, minresax1, minresax2):
