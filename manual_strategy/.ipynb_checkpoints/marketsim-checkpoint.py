@@ -123,6 +123,9 @@ def market_simulator(df_orders, df_orders_benchmark, start_val=1000000, commissi
     final_value = portvals.iloc[-1, -1]
     final_value_bm = portvals_bm.iloc[-1, -1]
     
+    # Get orders number
+    orders_count = len(portvals.index)
+    
     # Compare portfolio against Benchmark
     print ("Sharpe Ratio of Portfolio: {}".format(sharpe_ratio))
     print ("Sharpe Ratio of Benchmark : {}".format(sharpe_ratio_bm))
@@ -138,15 +141,17 @@ def market_simulator(df_orders, df_orders_benchmark, start_val=1000000, commissi
     print ()
     print ("Final Portfolio Value: {}".format(portvals.iloc[-1, -1]))
     print ("Final Benchmark Value: {}".format(portvals_bm.iloc[-1, -1]))
-    
+    print ()
+    print ("Portfolio Orders count: {}".format(len(portvals.index)))
     
 
     # Rename columns and normalize data to the first date of the date range
     portvals.rename(columns={"port_val": "Portfolio"}, inplace=True)
     portvals_bm.rename(columns={"port_val": "Benchmark"}, inplace=True)
+    
     plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vertical_lines)
     
-    return sharpe_ratio, cum_ret, std_daily_ret, avg_daily_ret, final_value
+    return orders_count, sharpe_ratio, cum_ret, std_daily_ret, avg_daily_ret, final_value
 
 def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vert_lines=False):
     """Plots portvals and portvals_bm, showing vertical lines for buy and sell orders

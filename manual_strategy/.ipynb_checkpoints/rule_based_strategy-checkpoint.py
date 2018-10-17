@@ -29,19 +29,11 @@ class RuleBasedStrategy(object):
         df_order_signals: A series that contains 1 for buy, 0 for hold and -1 for sell
         """
 
-        # Get Bollinger indicator and generate signals
-        # Compute Bollinger Bands
-        # 1. Compute rolling mean
-        rm_JPM = get_rolling_mean(sym_price, window=10)
-
-        # 2. Compute rolling standard deviation
-        rstd_JPM = get_rolling_std(sym_price, window=10)
-
-        # 3. Compute upper and lower bands
-        upper_band, lower_band = get_bollinger_bands(rm_JPM, rstd_JPM)
-        bollinger_signal = -1 * (sym_price < lower_band) + 1 * (sym_price > upper_band)
-
-
+        
+        # Get momentum indicator and generate signals
+        momentum = get_momentum(sym_price, 40)
+        mom_signal = -1 * (momentum < -0.07) + 1 * (momentum > 0.14)
+        
         # Get RSI indicator and generate signals
         rsi_indicator = get_RSI(sym_price)
         rsi_signal = 1 * (rsi_indicator < 50) + -1 * (rsi_indicator > 50)
@@ -50,13 +42,7 @@ class RuleBasedStrategy(object):
         sma_indicator = get_sma_indicator(sym_price, sym_price.rolling(window=30).mean())
         sma_signal = 1 * (sma_indicator < 0.0) + -1 * (sma_indicator > 0.0)
         
-        # Get momentum indicator and generate signals
-        momentum = get_momentum(sym_price, 40)
-        mom_signal = -1 * (momentum < -0.07) + 1 * (momentum > 0.14)
-        
-        # Combine individual signals
-        #signal = 1 * ((sma_signal == 1) & (mom_signal == 1)) \
-        #    + -1 * ((sma_signal == -1) & (mom_signal == -1))
+
         
         # Combine individual signals
         signal = 1 * ((sma_signal == 1) & (rsi_signal == 1) & (mom_signal == 1)) \
