@@ -1,10 +1,7 @@
 # Copyright 2018, Georgia Tech Research Corporation    
 # Atlanta, Georgia 30332-0415     
-# All Rights Reserved  
+# Machine Learning for Trading
 
-# ML4T_2018Fall
-Course website: http://quantsoftware.gatech.edu/CS7646_Spring_2018
+# Introduction
 
-Information on using the autograder on buffet0x servers: http://quantsoftware.gatech.edu/ML4T_Software_Setup
-
-
+These are the assigments for the [Machine Learning for Trading Audacity Course](https://classroom.udacity.com/courses/ud501)

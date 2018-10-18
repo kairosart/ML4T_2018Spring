@@ -149,5 +149,4 @@ def test_code():
     print ("Cumulative Return:", cr)
     print ("End value:", ev)
 
-if __name__ == "__main__":
-    test_code()
+
