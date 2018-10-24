@@ -87,7 +87,7 @@ def get_portfolio_value(prices, allocs, sv):
     return port_val
 
 
-def get_portfolio_stats(port_val, daily_rf=0.0, samples_per_year=252.0):
+def get_portfolio_stats(port_val, daily_rf, samples_per_year):
     """Helper function to compute portfolio statistics
 
     Parameters:
