@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 from util import get_data, create_df_benchmark, create_df_trades
 import QLearner as ql
-from indicators import get_momentum, get_sma_indicator, compute_bollinger_value
+from indicators import get_momentum, get_sma_indicator, compute_bollinger_value, plot_cum_return
 from marketsim import compute_portvals_single_symbol, market_simulator
 from analysis import get_portfolio_stats
 
@@ -180,6 +180,7 @@ class strategyLearner(object):
         df_features = self.get_features(df_prices[symbol])
         thresholds = self.get_thresholds(df_features, self.num_steps)
         cum_returns = []
+        epochs = []
         for epoch in range(1, self.epochs + 1):
             # Initial position is holding nothing
             position = self.CASH
@@ -218,6 +219,7 @@ class strategyLearner(object):
                                                       impact=self.impact)
             cum_return = get_portfolio_stats(portvals)[0]
             cum_returns.append(cum_return)
+            epochs.append(epoch)
             if self.verbose: 
                 print (epoch, cum_return)
             # Check for convergence after running for at least 20 epochs
@@ -226,10 +228,7 @@ class strategyLearner(object):
                 if self.has_converged(cum_returns):
                     break
         if self.verbose:
-            plt.plot(cum_returns)
-            plt.xlabel("Epoch")
-            plt.ylabel("Cumulative return (%)")
-            plt.show()
+            plot_cum_return(epochs, cum_returns)
 
     def test_policy(self, symbol="IBM", start_date=dt.datetime(2010,1,1),
         end_date=dt.datetime(2011,12,31), start_val=10000):

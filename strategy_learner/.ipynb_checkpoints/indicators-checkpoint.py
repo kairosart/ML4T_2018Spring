@@ -99,6 +99,61 @@ def get_RSI(price, n=14):
     # run for all periods with rolling_apply
     return pd.rolling_apply(gain,n,rsiCalc)  
 
+def plot_cum_return(epoch, cum_return, title="Cumulative Return",
+                  fig_size=(12, 6)):
+    """Plot cumulative return.
+
+    Parameters:
+    epoch: one forward pass and one backward pass of all the training examples
+    cum_retirm: cumulative return
+    fig_size: Width and height of the chart in inches
+    
+    Returns:
+    Plot cumulative return
+    """
+    trace_cum_r = go.Scatter(
+                x=epoch,
+                y=cum_return,
+                name = "CR",
+                line = dict(color = '#17BECF'),
+                opacity = 0.8)
+
+    
+        
+
+    data = [trace_cum_r]
+
+    layout = dict(
+        title = title,
+        
+        xaxis = dict(
+                title='Epoch',
+                rangeselector=dict(
+                        buttons=list([
+                            dict(count=1,
+                                 label='1m',
+                                 step='month',
+                                 stepmode='backward'),
+                            dict(count=6,
+                                 label='6m',
+                                 step='month',
+                                 stepmode='backward'),
+                            dict(step='all')
+                        ])
+                ),
+                range = [cum_return[0], cum_return[-1]]),
+            
+        yaxis = dict(
+                title='Cumulative return (%)'
+                ),
+    )
+        
+        
+        
+
+    fig = dict(data=data, layout=layout)
+    iplot(fig)
+
 
 def plot_momentum(dates, df_index, sym_price, sym_mom, title="Momentum Indicator",
                   fig_size=(12, 6)):
