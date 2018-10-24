@@ -141,7 +141,7 @@ def plot_cum_return(epoch, cum_return, title="Cumulative Return",
                             dict(step='all')
                         ])
                 ),
-                range = [cum_return[0], cum_return[-1]]),
+                range = [epoch[0], epoch[-1]]),
             
         yaxis = dict(
                 title='Cumulative return (%)'
