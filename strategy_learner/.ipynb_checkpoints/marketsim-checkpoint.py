@@ -182,8 +182,8 @@ def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vert_lines=F
     Returns: Plot a chart of the portfolio and benchmark performances
     """
     # Normalize data
-    portvals = normalize_data(portvals)
-    portvals_bm = normalize_data(portvals_bm)
+    #portvals = normalize_data(portvals)
+    #portvals_bm = normalize_data(portvals_bm)
     df = portvals_bm.join(portvals)
   
     # Min range

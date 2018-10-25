@@ -100,7 +100,7 @@ def compute_portvals_single_symbol(df_orders, symbol, start_val=1000000,
 
 
 def market_simulator(df_orders, df_orders_benchmark, symbol, start_val=1000000, commission=9.95, 
-    impact=0.005, daily_rf=0.0, samples_per_year=252.0, vertical_lines=False):
+    impact=0.005, daily_rf=0.0, samples_per_year=252.0, vertical_lines=False, title="Title", xtitle="X title", ytitle="Y title"):
     """
     This function takes in and executes trades from orders dataframes
     Parameters:
@@ -112,6 +112,9 @@ def market_simulator(df_orders, df_orders_benchmark, symbol, start_val=1000000, 
     daily_rf: Daily risk-free rate, assuming it does not change
     samples_per_year: Sampling frequency per year
     vertical_lines: Showing vertical lines for buy and sell orders
+    title: Chart title
+    xtitle: Chart X axe title
+    ytitle: Chart Y axe title
     
     Returns:
     Print out final portfolio value of the portfolio, as well as Sharpe ratio, 
@@ -165,25 +168,27 @@ def market_simulator(df_orders, df_orders_benchmark, symbol, start_val=1000000, 
     portvals.rename(columns={"port_val": "Portfolio"}, inplace=True)
     portvals_bm.rename(columns={"port_val": "Benchmark"}, inplace=True)
     
-    plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vertical_lines)
+    plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vertical_lines, title, xtitle, ytitle)
     
     return orders_count, sharpe_ratio, cum_ret, std_daily_ret, avg_daily_ret, final_value
 
-def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vert_lines=False):
+def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vert_lines=False, title="Title", xtitle="X title", ytitle="Y title"):
     """Plots portvals and portvals_bm, showing vertical lines for buy and sell orders
     
     Parameters:
     df_orders: A dataframe that contains portfolio orders
     portvals: A dataframe with one column containing daily portfolio value
     portvals_bm: A dataframe with one column containing daily benchmark value
-    save_fig: Whether to save the plot or not
-    fig_name: The name of the saved figure
-
+    vert_lines: Show buy and sell signals in chart
+    title: Chart title
+    xtitle: Chart X axe title
+    ytitle: Chart Y axe title
+    
     Returns: Plot a chart of the portfolio and benchmark performances
     """
     # Normalize data
-    portvals = normalize_data(portvals)
-    portvals_bm = normalize_data(portvals_bm)
+    #portvals = normalize_data(portvals)
+    #portvals_bm = normalize_data(portvals_bm)
     df = portvals_bm.join(portvals)
   
     # Min range
@@ -272,9 +277,9 @@ def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vert_lines=F
             t=100,
             pad=4
         ),
-        title = "Portfolio vs Benchmark",
+        title = title,
         xaxis = dict(
-                title='Dates',
+                title=xtitle,
                 rangeselector=dict(
                     buttons=list([
                         dict(count=1,
@@ -291,7 +296,7 @@ def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vert_lines=F
                 range = [portvals.index[0], portvals.index[-1]]),
             
         yaxis = dict(
-                title='Normalized Prices',
+                title=ytitle,
                 range = [min_range - (min_range * 10 / 100) ,max_range + (max_range * 10 / 100)]),
                     
         )
