@@ -99,7 +99,7 @@ def compute_portvals_single_symbol(df_orders, symbol, start_val=1000000,
     return portvals
 
 
-def market_simulator(df_orders, df_orders_benchmark, start_val=1000000, commission=9.95, 
+def market_simulator(df_orders, df_orders_benchmark, symbol, start_val=1000000, commission=9.95, 
     impact=0.005, daily_rf=0.0, samples_per_year=252.0, vertical_lines=False):
     """
     This function takes in and executes trades from orders dataframes
@@ -120,16 +120,16 @@ def market_simulator(df_orders, df_orders_benchmark, start_val=1000000, commissi
     """
     
     # Process portfolio orders
-    portvals = compute_portvals(df_orders=df_orders, start_val=start_val, 
-        commission=commission, impact=impact)
+    portvals = compute_portvals_single_symbol(df_orders=df_orders, symbol=symbol,
+        start_val=start_val, commission=commission, impact=impact)
 
     # Get portfolio stats
     cum_ret, avg_daily_ret, std_daily_ret, sharpe_ratio = get_portfolio_stats(portvals,
      daily_rf=daily_rf, samples_per_year=samples_per_year)
     
     # Process benchmark orders
-    portvals_bm = compute_portvals(df_orders=df_orders_benchmark, start_val=start_val, 
-        commission=commission, impact=impact)
+    portvals_bm = compute_portvals_single_symbol(df_orders=df_orders_benchmark, 
+        symbol=symbol, start_val=start_val, commission=commission, impact=impact)
     
     # Get benchmark stats
     cum_ret_bm, avg_daily_ret_bm, std_daily_ret_bm, sharpe_ratio_bm = get_portfolio_stats(portvals_bm,

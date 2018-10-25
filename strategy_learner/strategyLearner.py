@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 from util import get_data, create_df_benchmark, create_df_trades
 import QLearner as ql
-from indicators import get_momentum, get_sma_indicator, compute_bollinger_value, plot_cum_return
+from indicators import get_momentum, get_sma_indicator, compute_bollinger_value, plot_cum_return, get_RSI
 from marketsim import compute_portvals_single_symbol, market_simulator
 from analysis import get_portfolio_stats
 
@@ -61,11 +61,13 @@ class strategyLearner(object):
         momentum = get_momentum(prices, window)
         # Compute SMA indicator
         sma_indicator = get_sma_indicator(prices, rolling_mean)
+        # Get RSI indicator 
+        rsi_indicator = get_RSI(prices, window)
         # Compute Bollinger value
         bollinger_val = compute_bollinger_value(prices, rolling_mean, rolling_std)
         # Create a dataframe with three features
         df_features = pd.concat([momentum, sma_indicator], axis=1)
-        df_features = pd.concat([df_features, bollinger_val], axis=1)
+        df_features = pd.concat([df_features, rsi_indicator], axis=1)
         df_features.columns = ["ind{}".format(i) 
                                 for i in range(len(df_features.columns))]
         df_features.dropna(inplace=True)

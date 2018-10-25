@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 
 from util import get_data, create_df_benchmark, create_df_trades
 import QLearner as ql
-from indicators import get_momentum, get_sma_indicator, compute_bollinger_value
-from marketsim import compute_portvals, market_simulator
+from indicators import get_momentum, get_sma_indicator, compute_bollinger_value, plot_cum_return, get_RSI
+from marketsim import compute_portvals_single_symbol, market_simulator
 from analysis import get_portfolio_stats
 
 
@@ -61,11 +61,13 @@ class strategyLearner(object):
         momentum = get_momentum(prices, window)
         # Compute SMA indicator
         sma_indicator = get_sma_indicator(prices, rolling_mean)
+        # Get RSI indicator 
+        rsi_indicator = get_RSI(prices, window)
         # Compute Bollinger value
         bollinger_val = compute_bollinger_value(prices, rolling_mean, rolling_std)
         # Create a dataframe with three features
         df_features = pd.concat([momentum, sma_indicator], axis=1)
-        df_features = pd.concat([df_features, bollinger_val], axis=1)
+        df_features = pd.concat([df_features, rsi_indicator], axis=1)
         df_features.columns = ["ind{}".format(i) 
                                 for i in range(len(df_features.columns))]
         df_features.dropna(inplace=True)
@@ -180,6 +182,7 @@ class strategyLearner(object):
         df_features = self.get_features(df_prices[symbol])
         thresholds = self.get_thresholds(df_features, self.num_steps)
         cum_returns = []
+        epochs = []
         for epoch in range(1, self.epochs + 1):
             # Initial position is holding nothing
             position = self.CASH
@@ -211,13 +214,14 @@ class strategyLearner(object):
                 position += new_pos
             
             df_trades = create_df_trades(orders, symbol, self.num_shares)
-            portvals = compute_portvals(df_orders=df_trades, 
+            portvals = compute_portvals_single_symbol(df_orders=df_trades, 
                                                       symbol=symbol, 
                                                       start_val=start_val, 
                                                       commission=self.commission,
                                                       impact=self.impact)
             cum_return = get_portfolio_stats(portvals)[0]
             cum_returns.append(cum_return)
+            epochs.append(epoch)
             if self.verbose: 
                 print (epoch, cum_return)
             # Check for convergence after running for at least 20 epochs
@@ -226,10 +230,7 @@ class strategyLearner(object):
                 if self.has_converged(cum_returns):
                     break
         if self.verbose:
-            plt.plot(cum_returns)
-            plt.xlabel("Epoch")
-            plt.ylabel("Cumulative return (%)")
-            plt.show()
+            plot_cum_return(epochs, cum_returns)
 
     def test_policy(self, symbol="IBM", start_date=dt.datetime(2010,1,1),
         end_date=dt.datetime(2011,12,31), start_val=10000):
