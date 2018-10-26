@@ -292,6 +292,69 @@ def plot_sma_indicator(dates, df_index, sym_price, sma_indicator, sma_quality,
     fig = dict(data=data, layout=layout)
     iplot(fig)
 
+def plot_momentum_sma_indicator(dates, df_index, sym_price, sma_indicator, momentum, 
+                       title="MOMENTUM/ SMA Indicator", fig_size=(12, 6)):
+    """Plot Momentum/SMA cross indicator for a symbol.
+
+    Parameters:
+    dates: Range of dates
+    df_index: Date index
+    sym_price: Price, typically adjusted close price, series of symbol
+    sma_indicator: The simple moving average indicator
+    Momentum: Momentum
+    title: The chart title
+    fig_size: Width and height of the chart in inches
+
+    Returns:
+    Plot Momentum/SMA cross points
+    """
+    
+
+    trace_sma = go.Scatter(
+                x=df_index,
+                y=sma_indicator,
+                name = "SMA",
+                line = dict(color = '#FF8000'),
+                opacity = 0.8)
+        
+    trace_momentum = go.Scatter(
+                x=df_index,
+                y=momentum,
+                name = "Momentum",
+                line = dict(color = '#04B404'),
+                opacity = 0.8)
+        
+    data = [trace_sma, trace_momentum]
+
+    layout = dict(
+        title = title,
+        xaxis = dict(
+                title='Dates',
+                rangeselector=dict(
+                        buttons=list([
+                            dict(count=1,
+                                 label='1m',
+                                 step='month',
+                                 stepmode='backward'),
+                            dict(count=6,
+                                 label='6m',
+                                 step='month',
+                                 stepmode='backward'),
+                            dict(step='all')
+                        ])
+                ),
+                range = [dates.values[0], dates.values[1]]),
+            
+        yaxis = dict(
+                title='Price')
+                    
+        )
+        
+        
+
+    fig = dict(data=data, layout=layout)
+    iplot(fig)    
+    
 def plot_bollinger(dates, df_index, sym_price, upper_band, lower_band, bollinger_val, 
                    num_std=1, title="Bollinger Indicator", fig_size=(12, 6)):
     """Plot Bollinger bands and value for a symbol.
