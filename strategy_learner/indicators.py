@@ -155,7 +155,7 @@ def plot_cum_return(epoch, cum_return, title="Cumulative Return",
     iplot(fig)
 
 
-def plot_momentum(dates, df_index, sym_price, sym_mom, title="Momentum Indicator",
+def plot_momentum(df_index, sym_price, sym_mom, title="Momentum Indicator",
                   fig_size=(12, 6)):
     """Plot momentum and prices for a symbol.
 
@@ -205,7 +205,7 @@ def plot_momentum(dates, df_index, sym_price, sym_mom, title="Momentum Indicator
                             dict(step='all')
                         ])
                 ),
-                range = [dates.values[0], dates.values[1]]),
+                range = [df_index.values[0], df_index.values[1]]),
             
         yaxis = dict(
                 title='Adjusted Closed Price'

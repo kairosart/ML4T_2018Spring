@@ -249,7 +249,7 @@ class strategyLearner(object):
         """
 
         dates = pd.date_range(start_date, end_date)
-        # Get adjusted close pricess for symbol
+        # Get adjusted close prices for symbol
         df_prices = get_data([symbol], dates)
         # Get features and thresholds
         df_features = self.get_features(df_prices[symbol])
@@ -275,6 +275,7 @@ class strategyLearner(object):
             position += new_pos
         # Create a trade dataframe
         df_trades = create_df_trades(orders, symbol, self.num_shares)
+
         return df_trades
         
 

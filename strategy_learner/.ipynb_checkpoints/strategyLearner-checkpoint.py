@@ -275,6 +275,7 @@ class strategyLearner(object):
             position += new_pos
         # Create a trade dataframe
         df_trades = create_df_trades(orders, symbol, self.num_shares)
+
         return df_trades
         
 
