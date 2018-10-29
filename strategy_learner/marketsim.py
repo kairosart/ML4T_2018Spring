@@ -183,7 +183,6 @@ def plot_norm_data_vertical_lines(df_orders, portvals, portvals_bm, vert_lines=F
     title: Chart title
     xtitle: Chart X axe title
     ytitle: Chart Y axe title
-    
     Returns: Plot a chart of the portfolio and benchmark performances
     """
     # Normalize data

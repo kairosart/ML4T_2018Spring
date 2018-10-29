@@ -1,0 +1,947 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{strategy\_learner}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \section{Strategy Learner}\label{strategy-learner}
+
+ML for trading Udacity Course exercise
+
+More info: https://quantsoftware.gatech.edu/Strategy\_learner
+
+A transcription of the Udacity Course lectures can be find on
+https://docs.google.com/document/d/1ELqlnuTSdc9-MDHOkV0uvSY4RmI1eslyQlU9DgOY\_jc/edit?usp=sharing
+
+Kairoart 2018 """
+
+    \subsection{Overview}\label{overview}
+
+In this project you will design a learning trading agent. You must draw
+on the learners you have created so far in the course. Your choices are:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Regression or classification-based learner: Create a strategy using
+  your Random Forest learner. Suggestions if you follow this approach:
+  Classification\_Trader\_Hints. Important note, if you choose this
+  method, you must set the leaf\_size for your learner to 5 or greater.
+  This is to avoid degenerate overfitting in-sample.
+\item
+  Reinforcement Learner-based approach: Create a Q-learning-based
+  strategy using your Q-Learner. Read the Classification\_Trader\_Hints
+  first, because many of the ideas there are relevant for the Q trader,
+  then see Q\_Trader\_Hints
+\item
+  Optimization-based learner: Create a scan-based strategy using an
+  optimizer. Read the Classification\_Trader\_Hints first, because many
+  of the ideas there are relevant for the Opto trader, then see
+  Opto\_Trader\_Hints
+\end{enumerate}
+
+Regardless of your choice above, your learner should work in the
+following way:
+
+\begin{itemize}
+\tightlist
+\item
+  In the training phase (e.g., addEvidence()) your learner will be
+  provided with a stock symbol and a time period. It should use this
+  data to learn a strategy. For instance, for a regression-based learner
+  it will use this data to make predictions about future price changes.
+\item
+  In the testing phase (e.g., testPolicy()) your learner will be
+  provided a symbol and a date range. All learning should be turned OFF
+  during this phase.
+\end{itemize}
+
+If the date range is the same as used for the training, it is an
+in-sample test. Otherwise it is an out-of-sample test. Your learner
+should return a trades dataframe like it did in the last project. Here
+are some important requirements: Your testPolicy() method should be much
+faster than your addEvidence() method. The timeout requirements (see
+rubric) will be set accordingly. Multiple calls to your testPolicy()
+method should return exactly the same result.
+
+    \subsection{Tasks}\label{tasks}
+
+\begin{itemize}
+\tightlist
+\item
+  Devise numerical/technical indicators to evaluate the state of a stock
+  on each day.
+\item
+  Build a strategy learner based on one of the learners described above
+  that uses the indicators.
+\item
+  Test/debug the strategy learner on specific symbol/time period
+  problems.
+\item
+  Write a report describing your learning strategy.
+\end{itemize}
+
+    \subsection{Data Details, Dates and
+Rules}\label{data-details-dates-and-rules}
+
+\begin{itemize}
+\tightlist
+\item
+  For your report, trade only the symbol JPM. This will enable us to
+  more easily compare results. We will test your learner with other
+  symbols as well.
+\item
+  You may use data from other symbols (such as SPY) to inform your
+  strategy.
+\item
+  The in sample/development period is January 1, 2008 to December 31
+  2009.
+\item
+  The out of sample/testing period is January 1, 2010 to December 31
+  2011.
+\item
+  Starting cash is 100,000.
+\item
+  Allowable positions are: 1000 shares long, 1000 shares short, 0
+  shares.
+\item
+  Benchmark: The performance of a portfolio starting with 100,000 cash,
+  investing in 1000 shares of the symbol in use and holding that
+  position. Include transaction costs.
+\item
+  There is no limit on leverage.
+\item
+  Transaction costs: Commission will always be 0.00, Impact may vary,
+  and will be passed in as a parameter to the learner.
+\item
+  Minimize use of herrings.
+\end{itemize}
+
+    \subsection{Implement Strategy
+Learner}\label{implement-strategy-learner}
+
+For this part of the project you should develop a learner that can learn
+a trading policy using your learner. You should be able to use your
+Q-Learner or RTLearner from the earlier project directly, with no
+changes. If you want to use the optimization approach, you will need to
+create new code or that. You will need to write code in
+StrategyLearner.py to "wrap" your learner appropriately to frame the
+trading problem for it.
+
+    \subsubsection{StrategyLearner API}\label{strategylearner-api}
+
+import StrategyLearner as sl learner = sl.StrategyLearner(verbose =
+False, impact = 0.000) \# constructor learner.addEvidence(symbol =
+"AAPL", sd=dt.datetime(2008,1,1), ed=dt.datetime(2009,12,31), sv =
+100000) \# training phase df\_trades = learner.testPolicy(symbol =
+"AAPL", sd=dt.datetime(2010,1,1), ed=dt.datetime(2011,12,31), sv =
+100000) \# testing phase
+
+The input parameters are:
+
+\begin{itemize}
+\tightlist
+\item
+  verbose: if False do not generate any output
+\item
+  impact: The market impact of each transaction.
+\item
+  symbol: the stock symbol to train on
+\item
+  sd: A datetime object that represents the start date
+\item
+  ed: A datetime object that represents the end date
+\item
+  sv: Start value of the portfolio
+\end{itemize}
+
+The output result is:
+
+\begin{itemize}
+\tightlist
+\item
+  df\_trades: A data frame whose values represent trades for each day.
+  Legal values are +1000.0 indicating a BUY of 1000 shares, -1000.0
+  indicating a SELL of 1000 shares, and 0.0 indicating NOTHING. Values
+  of +2000 and -2000 for trades are also legal when switching from long
+  to short or short to long so long as net holdings are constrained to
+  -1000, 0, and 1000.
+\end{itemize}
+
+    \subsection{Goal}\label{goal}
+
+Implement a StrategyLearner that trains a QLearner for trading a symbol.
+
+    \subsection{Import libraries}\label{import-libraries}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+        \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}  
+        \PY{k+kn}{import} \PY{n+nn}{datetime} \PY{k}{as} \PY{n+nn}{dt}
+        
+        \PY{k+kn}{from} \PY{n+nn}{util} \PY{k}{import} \PY{n}{create\PYZus{}df\PYZus{}benchmark}\PY{p}{,} \PY{n}{get\PYZus{}data}
+        \PY{k+kn}{from} \PY{n+nn}{strategyLearner} \PY{k}{import} \PY{n}{strategyLearner}
+        \PY{k+kn}{from} \PY{n+nn}{marketsim} \PY{k}{import} \PY{n}{compute\PYZus{}portvals\PYZus{}single\PYZus{}symbol}\PY{p}{,} \PY{n}{market\PYZus{}simulator}
+        \PY{k+kn}{from} \PY{n+nn}{indicators} \PY{k}{import} \PY{n}{get\PYZus{}momentum}\PY{p}{,} \PY{n}{get\PYZus{}sma}\PY{p}{,} \PY{n}{get\PYZus{}sma\PYZus{}indicator}\PY{p}{,} \PY{n}{compute\PYZus{}bollinger\PYZus{}value}\PY{p}{,} \PY{n}{get\PYZus{}RSI}\PY{p}{,} \PY{n}{plot\PYZus{}cum\PYZus{}return}\PY{p}{,}  \PY{n}{plot\PYZus{}momentum}\PY{p}{,} \PY{n}{plot\PYZus{}sma\PYZus{}indicator}\PY{p}{,} \PY{n}{plot\PYZus{}rsi\PYZus{}indicator}\PY{p}{,} \PY{n}{plot\PYZus{}momentum\PYZus{}sma\PYZus{}indicator}
+\end{Verbatim}
+
+
+    
+    
+    
+    
+    \subsection{Initial Variables}\label{initial-variables}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{n}{start\PYZus{}val} \PY{o}{=} \PY{l+m+mi}{100000}
+        \PY{n}{symbol} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{JPM}\PY{l+s+s2}{\PYZdq{}}
+        \PY{n}{commission} \PY{o}{=} \PY{l+m+mf}{0.00}
+        \PY{n}{impact} \PY{o}{=} \PY{l+m+mf}{0.0}
+        \PY{n}{num\PYZus{}shares} \PY{o}{=} \PY{l+m+mi}{1000}
+\end{Verbatim}
+
+
+    \subsection{In-sample performance}\label{in-sample-performance}
+
+Show the performances of portfolio and benchmark in the in-sample
+period.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{c+c1}{\PYZsh{} Specify the start and end dates for this period.}
+        \PY{n}{start\PYZus{}d} \PY{o}{=} \PY{n}{dt}\PY{o}{.}\PY{n}{datetime}\PY{p}{(}\PY{l+m+mi}{2008}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+        \PY{n}{end\PYZus{}d} \PY{o}{=} \PY{n}{dt}\PY{o}{.}\PY{n}{datetime}\PY{p}{(}\PY{l+m+mi}{2009}\PY{p}{,} \PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{31}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Get benchmark data}
+        \PY{n}{benchmark\PYZus{}prices} \PY{o}{=} \PY{n}{get\PYZus{}data}\PY{p}{(}\PY{p}{[}\PY{n}{symbol}\PY{p}{]}\PY{p}{,} \PY{n}{pd}\PY{o}{.}\PY{n}{date\PYZus{}range}\PY{p}{(}\PY{n}{start\PYZus{}d}\PY{p}{,} \PY{n}{end\PYZus{}d}\PY{p}{)}\PY{p}{,} \PY{n}{addSPY}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Create benchmark data: Benchmark is a portfolio starting with \PYZdl{}100,000, investing in 1000 shares of symbol and holding that position}
+        \PY{n}{df\PYZus{}benchmark\PYZus{}trades} \PY{o}{=} \PY{n}{create\PYZus{}df\PYZus{}benchmark}\PY{p}{(}\PY{n}{symbol}\PY{p}{,} \PY{n}{start\PYZus{}d}\PY{p}{,} \PY{n}{end\PYZus{}d}\PY{p}{,} \PY{n}{num\PYZus{}shares}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{}print (df\PYZus{}benchmark\PYZus{}trades)}
+        
+        \PY{c+c1}{\PYZsh{} Train and test a StrategyLearner}
+        \PY{c+c1}{\PYZsh{} Set verbose to True will print out and plot the cumulative return for each training epoch}
+        \PY{n}{stl} \PY{o}{=} \PY{n}{strategyLearner}\PY{p}{(}\PY{n}{num\PYZus{}shares}\PY{o}{=}\PY{n}{num\PYZus{}shares}\PY{p}{,} \PY{n}{impact}\PY{o}{=}\PY{n}{impact}\PY{p}{,} 
+                              \PY{n}{commission}\PY{o}{=}\PY{n}{commission}\PY{p}{,} \PY{n}{verbose}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,}
+                              \PY{n}{num\PYZus{}states}\PY{o}{=}\PY{l+m+mi}{3000}\PY{p}{,} \PY{n}{num\PYZus{}actions}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{)}
+        \PY{n}{stl}\PY{o}{.}\PY{n}{add\PYZus{}evidence}\PY{p}{(}\PY{n}{symbol}\PY{o}{=}\PY{n}{symbol}\PY{p}{,} \PY{n}{start\PYZus{}val}\PY{o}{=}\PY{n}{start\PYZus{}val}\PY{p}{,} 
+                         \PY{n}{start\PYZus{}date}\PY{o}{=}\PY{n}{start\PYZus{}d}\PY{p}{,} \PY{n}{end\PYZus{}date}\PY{o}{=}\PY{n}{end\PYZus{}d}\PY{p}{)}
+        \PY{n}{df\PYZus{}trades} \PY{o}{=} \PY{n}{stl}\PY{o}{.}\PY{n}{test\PYZus{}policy}\PY{p}{(}\PY{n}{symbol}\PY{o}{=}\PY{n}{symbol}\PY{p}{,} \PY{n}{start\PYZus{}date}\PY{o}{=}\PY{n}{start\PYZus{}d}\PY{p}{,}
+                                    \PY{n}{end\PYZus{}date}\PY{o}{=}\PY{n}{end\PYZus{}d}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{}print (df\PYZus{}trades)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/home/emi/Jupyter/ML4T\_2018Spring/strategy\_learner/indicators.py:100: FutureWarning:
+
+pd.rolling\_apply is deprecated for Series and will be removed in a future version, replace with 
+	Series.rolling(window=10,center=False).apply(func=<function>,args=<tuple>,kwargs=<dict>)
+
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+1 -0.15459999999999996
+2 -0.13849999999999996
+3 0.12729999999999997
+4 0.29869999999999997
+5 0.4162999999999999
+6 0.4162999999999999
+7 0.4162999999999999
+8 0.4162999999999999
+9 0.4162999999999999
+10 0.4162999999999999
+11 0.4162999999999999
+12 0.4162999999999999
+13 0.4162999999999999
+14 0.4162999999999999
+15 0.4162999999999999
+16 0.4162999999999999
+17 0.4162999999999999
+18 0.4162999999999999
+19 0.4162999999999999
+20 0.4162999999999999
+21 0.4162999999999999
+
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_12_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{Training market
+simulator}\label{training-market-simulator}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{c+c1}{\PYZsh{} Retrieve performance stats via a market simulator}
+        \PY{n+nb}{print} \PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Performances during training period for }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{symbol}\PY{p}{)}\PY{p}{)}
+        \PY{n+nb}{print} \PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Date Range: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{ to }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{start\PYZus{}d}\PY{p}{,} \PY{n}{end\PYZus{}d}\PY{p}{)}\PY{p}{)}
+        \PY{n}{orders\PYZus{}count}\PY{p}{,} \PY{n}{sharpe\PYZus{}ratio}\PY{p}{,} \PY{n}{cum\PYZus{}ret}\PY{p}{,} \PY{n}{std\PYZus{}daily\PYZus{}ret}\PY{p}{,} \PY{n}{avg\PYZus{}daily\PYZus{}ret}\PY{p}{,} \PY{n}{final\PYZus{}value} \PY{o}{=} \PY{n}{market\PYZus{}simulator}\PY{p}{(}\PY{n}{df\PYZus{}trades}\PY{p}{,} \PY{n}{df\PYZus{}benchmark\PYZus{}trades}\PY{p}{,} \PY{n}{symbol}\PY{o}{=}\PY{n}{symbol}\PY{p}{,} 
+                         \PY{n}{start\PYZus{}val}\PY{o}{=}\PY{n}{start\PYZus{}val}\PY{p}{,} \PY{n}{commission}\PY{o}{=}\PY{n}{commission}\PY{p}{,} \PY{n}{impact}\PY{o}{=}\PY{n}{impact}\PY{p}{,} \PY{n}{title}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Portfolio Value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xtitle}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Dates}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ytitle}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Performances during training period for JPM
+Date Range: 2008-01-01 00:00:00 to 2009-12-31 00:00:00
+Sharpe Ratio of Portfolio: 1.4565263293302735
+Sharpe Ratio of Benchmark : 0.15691840642403027
+
+Cumulative Return of Portfolio: 0.4162999999999999
+Cumulative Return of Benchmark : 0.012299999999999978
+
+Standard Deviation of Portfolio: 0.008049350943393187
+Standard Deviation of Benchmark : 0.017004366271213767
+
+Average Daily Return of Portfolio: 0.0007385483494512656
+Average Daily Return of Benchmark : 0.00016808697819094035
+
+Final Portfolio Value: 141630.0
+Final Benchmark Value: 101230.0
+
+Portfolio Orders count: 494
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/home/emi/anaconda3/lib/python3.6/site-packages/plotly/graph\_objs/\_deprecations.py:396: DeprecationWarning:
+
+plotly.graph\_objs.Margin is deprecated.
+Please replace it with one of the following more specific types
+  - plotly.graph\_objs.layout.Margin
+
+
+
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_14_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsection{Out of sample performance}\label{out-of-sample-performance}
+
+Show the performances of portfolio and benchmark in the out of sample
+period. Use the same StrategyLearner trained above and retrieve a trades
+dataframe via test\_policy.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{c+c1}{\PYZsh{} Specify the start and end dates for this period.}
+        \PY{n}{start\PYZus{}d} \PY{o}{=} \PY{n}{dt}\PY{o}{.}\PY{n}{datetime}\PY{p}{(}\PY{l+m+mi}{2010}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+        \PY{n}{end\PYZus{}d} \PY{o}{=} \PY{n}{dt}\PY{o}{.}\PY{n}{datetime}\PY{p}{(}\PY{l+m+mi}{2011}\PY{p}{,} \PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{31}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Get benchmark data}
+        \PY{n}{benchmark\PYZus{}prices} \PY{o}{=} \PY{n}{get\PYZus{}data}\PY{p}{(}\PY{p}{[}\PY{n}{symbol}\PY{p}{]}\PY{p}{,} \PY{n}{pd}\PY{o}{.}\PY{n}{date\PYZus{}range}\PY{p}{(}\PY{n}{start\PYZus{}d}\PY{p}{,} \PY{n}{end\PYZus{}d}\PY{p}{)}\PY{p}{,} \PY{n}{addSPY}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Create benchmark data: Benchmark is a portfolio starting with \PYZdl{}100,000, investing in 1000 shares of symbol and holding that position}
+        \PY{n}{df\PYZus{}benchmark\PYZus{}trades} \PY{o}{=} \PY{n}{create\PYZus{}df\PYZus{}benchmark}\PY{p}{(}\PY{n}{symbol}\PY{p}{,} \PY{n}{start\PYZus{}d}\PY{p}{,} \PY{n}{end\PYZus{}d}\PY{p}{,} \PY{n}{num\PYZus{}shares}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{}print (df\PYZus{}benchmark\PYZus{}trades)}
+        
+        \PY{c+c1}{\PYZsh{} Test a StrategyLearner}
+        \PY{c+c1}{\PYZsh{} Use the same StrategyLearner trained above and retrieve a trades dataframe via test\PYZus{}policy}
+        \PY{n}{df\PYZus{}trades} \PY{o}{=} \PY{n}{stl}\PY{o}{.}\PY{n}{test\PYZus{}policy}\PY{p}{(}\PY{n}{symbol}\PY{o}{=}\PY{n}{symbol}\PY{p}{,} \PY{n}{start\PYZus{}date}\PY{o}{=}\PY{n}{start\PYZus{}d}\PY{p}{,}
+                                    \PY{n}{end\PYZus{}date}\PY{o}{=}\PY{n}{end\PYZus{}d}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{}print (df\PYZus{}trades)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/home/emi/Jupyter/ML4T\_2018Spring/strategy\_learner/indicators.py:100: FutureWarning:
+
+pd.rolling\_apply is deprecated for Series and will be removed in a future version, replace with 
+	Series.rolling(window=10,center=False).apply(func=<function>,args=<tuple>,kwargs=<dict>)
+
+
+    \end{Verbatim}
+
+    \subsubsection{Test market simulator}\label{test-market-simulator}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} \PY{c+c1}{\PYZsh{} Retrieve performance stats via a market simulator}
+        \PY{n+nb}{print} \PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Performances during test period for }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{symbol}\PY{p}{)}\PY{p}{)}
+        \PY{n+nb}{print} \PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Date Range: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{ to }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{start\PYZus{}d}\PY{p}{,} \PY{n}{end\PYZus{}d}\PY{p}{)}\PY{p}{)}
+        \PY{n}{orders\PYZus{}count}\PY{p}{,} \PY{n}{sharpe\PYZus{}ratio}\PY{p}{,} \PY{n}{cum\PYZus{}ret}\PY{p}{,} \PY{n}{std\PYZus{}daily\PYZus{}ret}\PY{p}{,} \PY{n}{avg\PYZus{}daily\PYZus{}ret}\PY{p}{,} \PY{n}{final\PYZus{}value} \PY{o}{=} \PY{n}{market\PYZus{}simulator}\PY{p}{(}\PY{n}{df\PYZus{}trades}\PY{p}{,} \PY{n}{df\PYZus{}benchmark\PYZus{}trades}\PY{p}{,} \PY{n}{symbol}\PY{o}{=}\PY{n}{symbol}\PY{p}{,} 
+                         \PY{n}{start\PYZus{}val}\PY{o}{=}\PY{n}{start\PYZus{}val}\PY{p}{,} \PY{n}{commission}\PY{o}{=}\PY{n}{commission}\PY{p}{,} \PY{n}{impact}\PY{o}{=}\PY{n}{impact}\PY{p}{,} \PY{n}{title}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Portfolio Value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{xtitle}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Dates}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ytitle}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Performances during test period for JPM
+Date Range: 2010-01-01 00:00:00 to 2011-12-31 00:00:00
+Sharpe Ratio of Portfolio: 0.06012262689818714
+Sharpe Ratio of Benchmark : -0.2568129607376273
+
+Cumulative Return of Portfolio: 0.0020999999999999908
+Cumulative Return of Benchmark : -0.08340000000000003
+
+Standard Deviation of Portfolio: 0.006219177700433581
+Standard Deviation of Benchmark : 0.008481007498803986
+
+Average Daily Return of Portfolio: 2.3554323928895607e-05
+Average Daily Return of Benchmark : -0.00013720316019481813
+
+Final Portfolio Value: 100210.0
+Final Benchmark Value: 91660.0
+
+Portfolio Orders count: 493
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/home/emi/anaconda3/lib/python3.6/site-packages/plotly/graph\_objs/\_deprecations.py:396: DeprecationWarning:
+
+plotly.graph\_objs.Margin is deprecated.
+Please replace it with one of the following more specific types
+  - plotly.graph\_objs.layout.Margin
+
+
+
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_18_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{df\PYZus{}trades}\PY{o}{.}\PY{n}{info}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+<class 'pandas.core.frame.DataFrame'>
+DatetimeIndex: 118 entries, 2010-01-19 to 2011-12-29
+Data columns (total 1 columns):
+Shares    118 non-null int64
+dtypes: int64(1)
+memory usage: 1.8 KB
+
+    \end{Verbatim}
+
+    \section{Report}\label{report}
+
+Describe the steps you took to frame the trading problem as a learning
+problem for your learner. What are your indicators? Did you adjust the
+data in any way (dicretization, standardization)? Why or why not?
+
+\textbf{Steps:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Get adjusted close prices for symbol.
+\item
+  Set the QLearner parameters:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    num\_shares: The number of shares that can be traded in one order
+  \item
+    epochs: The number of times to train the QLearner
+  \item
+    num\_steps: The number of steps used in getting thresholds for the
+    discretization process. It is the number of groups to put data into.
+  \end{itemize}
+\item
+  Compute technical indicators and use them as features to be fed into a
+  Q-learner.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Momentum
+  \item
+    SMA indicator
+  \item
+    RSI indicator
+  \end{itemize}
+\item
+  Get features and thresholds.
+\item
+  Define states, actions, and rewards.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    States are combinations of our features.
+  \item
+    Actions are buy, sell, do nothing.
+  \item
+    Rewards: Calculate the daily reward as a percentage change in
+    prices:
+
+    \begin{itemize}
+    \tightlist
+    \item
+      Position is long: if the price goes up (curr\_price \textgreater{}
+      prev\_price), we get a positive reward; otherwise, we get a
+      negative reward
+    \item
+      Position is short: if the price goes down, we get a positive
+      reward; otherwise, we a negative reward
+    \item
+      Position is cash: we get no reward
+    \end{itemize}
+  \end{itemize}
+\item
+  Set initial position holding to nothing.
+\item
+  Create a series that captures order signals based on actions taken.
+\item
+  Iterate over the data by date.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Discretize features and return a state. Get a state; add 1 to
+    position so that states \textgreater{}= 0.
+  \item
+    On the first day, get an action without updating the Q-table.
+  \item
+    On the last day, close any open positions.
+  \item
+    Add new\_pos to orders.
+  \item
+    Update current position.
+  \end{itemize}
+\item
+  Create a trade dataframe.
+\item
+  Training: Choose the training period and you iterate over that
+  training period and update your Q-table on each iteration. When you
+  reach the end of that training period you backtest to see how good the
+  model is and you go back and repeat, until the model quits getting
+  better. Once it's converged you stop, you've got your model.
+\item
+  Testing the model: You just backtest it on later data.
+\end{enumerate}
+
+    \subsection{Indicator charts}\label{indicator-charts}
+
+    \subsubsection{Momentum chart}\label{momentum-chart}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} \PY{c+c1}{\PYZsh{} Specify the start and end dates for this period.}
+         \PY{n}{start\PYZus{}d} \PY{o}{=} \PY{n}{dt}\PY{o}{.}\PY{n}{datetime}\PY{p}{(}\PY{l+m+mi}{2008}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{end\PYZus{}d} \PY{o}{=} \PY{n}{dt}\PY{o}{.}\PY{n}{datetime}\PY{p}{(}\PY{l+m+mi}{2009}\PY{p}{,} \PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{31}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Set dates}
+         \PY{n}{dates} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{date\PYZus{}range}\PY{p}{(}\PY{n}{start\PYZus{}d}\PY{p}{,} \PY{n}{end\PYZus{}d}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Get adjusted close prices for symbol}
+         \PY{n}{df} \PY{o}{=} \PY{n}{get\PYZus{}data}\PY{p}{(}\PY{p}{[}\PY{n}{symbol}\PY{p}{]}\PY{p}{,} \PY{n}{dates}\PY{p}{,} \PY{n}{addSPY}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+         \PY{n}{df} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{p}{)}
+         
+         
+         \PY{c+c1}{\PYZsh{} Normalize the prices Dataframe}
+         \PY{n}{normed} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{)}
+         \PY{k}{for} \PY{n}{column} \PY{o+ow}{in} \PY{n}{df}\PY{p}{:}
+             \PY{n}{normed}\PY{p}{[}\PY{n}{column}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{column}\PY{p}{]}\PY{o}{.}\PY{n}{values} \PY{o}{/} \PY{n}{df}\PY{p}{[}\PY{n}{column}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{;}
+         
+         \PY{c+c1}{\PYZsh{} 2. Compute momentum}
+         \PY{n}{sym\PYZus{}mom} \PY{o}{=} \PY{n}{get\PYZus{}momentum}\PY{p}{(}\PY{n}{normed}\PY{p}{[}\PY{n}{column}\PY{p}{]}\PY{p}{,} \PY{n}{window}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} 3. Plot raw JPM values and Momentum}
+         \PY{n}{plot\PYZus{}momentum}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{index}\PY{p}{,} \PY{n}{normed}\PY{p}{[}\PY{n}{column}\PY{p}{]}\PY{p}{,} \PY{n}{sym\PYZus{}mom}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Momentum Indicator}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_23_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{SMA indicator}\label{sma-indicator}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{c+c1}{\PYZsh{} Specify the start and end dates for this period.}
+        \PY{n}{start\PYZus{}d} \PY{o}{=} \PY{n}{dt}\PY{o}{.}\PY{n}{datetime}\PY{p}{(}\PY{l+m+mi}{2008}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+        \PY{n}{end\PYZus{}d} \PY{o}{=} \PY{n}{dt}\PY{o}{.}\PY{n}{datetime}\PY{p}{(}\PY{l+m+mi}{2009}\PY{p}{,} \PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{31}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Set dates}
+        \PY{n}{dates} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{date\PYZus{}range}\PY{p}{(}\PY{n}{start\PYZus{}d}\PY{p}{,} \PY{n}{end\PYZus{}d}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Get adjusted close prices for symbol}
+        \PY{n}{df} \PY{o}{=} \PY{n}{get\PYZus{}data}\PY{p}{(}\PY{p}{[}\PY{n}{symbol}\PY{p}{]}\PY{p}{,} \PY{n}{dates}\PY{p}{,} \PY{n}{addSPY}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+        \PY{n}{df} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Normalize the prices Dataframe}
+        \PY{n}{normed} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{)}
+        \PY{k}{for} \PY{n}{column} \PY{o+ow}{in} \PY{n}{df}\PY{p}{:}
+            \PY{n}{normed}\PY{p}{[}\PY{n}{column}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{column}\PY{p}{]}\PY{o}{.}\PY{n}{values} \PY{o}{/} \PY{n}{df}\PY{p}{[}\PY{n}{column}\PY{p}{]}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{;}
+        
+        \PY{c+c1}{\PYZsh{} Compute SMA}
+        \PY{n}{sma\PYZus{}JPM}\PY{p}{,} \PY{n}{q} \PY{o}{=} \PY{n}{get\PYZus{}sma}\PY{p}{(}\PY{n}{normed}\PY{p}{[}\PY{n}{column}\PY{p}{]}\PY{p}{,} \PY{n}{window}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Plot symbol values, SMA and SMA quality}
+        \PY{n}{plot\PYZus{}sma\PYZus{}indicator}\PY{p}{(}\PY{n}{dates}\PY{p}{,} \PY{n}{df}\PY{o}{.}\PY{n}{index}\PY{p}{,} \PY{n}{normed}\PY{p}{[}\PY{n}{column}\PY{p}{]}\PY{p}{,} \PY{n}{sma\PYZus{}JPM}\PY{p}{,} \PY{n}{q}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Simple Moving Average (SMA)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_25_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{Momentum/SMA cross
+indicator}\label{momentumsma-cross-indicator}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} \PY{c+c1}{\PYZsh{} Specify the start and end dates for this period.}
+         \PY{n}{start\PYZus{}d} \PY{o}{=} \PY{n}{dt}\PY{o}{.}\PY{n}{datetime}\PY{p}{(}\PY{l+m+mi}{2008}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{end\PYZus{}d} \PY{o}{=} \PY{n}{dt}\PY{o}{.}\PY{n}{datetime}\PY{p}{(}\PY{l+m+mi}{2009}\PY{p}{,} \PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{31}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Set dates}
+         \PY{n}{dates} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{date\PYZus{}range}\PY{p}{(}\PY{n}{start\PYZus{}d}\PY{p}{,} \PY{n}{end\PYZus{}d}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Get adjusted close prices for symbol}
+         \PY{n}{df} \PY{o}{=} \PY{n}{get\PYZus{}data}\PY{p}{(}\PY{p}{[}\PY{n}{symbol}\PY{p}{]}\PY{p}{,} \PY{n}{dates}\PY{p}{,} \PY{n}{addSPY}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+         \PY{n}{df} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Compute momentum}
+         \PY{n}{sym\PYZus{}mom} \PY{o}{=} \PY{n}{get\PYZus{}momentum}\PY{p}{(}\PY{n}{normed}\PY{p}{[}\PY{n}{column}\PY{p}{]}\PY{p}{,} \PY{n}{window}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Compute SMA}
+         \PY{n}{sma\PYZus{}JPM}\PY{p}{,} \PY{n}{q} \PY{o}{=} \PY{n}{get\PYZus{}sma}\PY{p}{(}\PY{n}{normed}\PY{p}{[}\PY{n}{column}\PY{p}{]}\PY{p}{,} \PY{n}{window}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Plot symbol values, SMA and Momentum}
+         \PY{n}{plot\PYZus{}momentum\PYZus{}sma\PYZus{}indicator}\PY{p}{(}\PY{n}{dates}\PY{p}{,} \PY{n}{df}\PY{o}{.}\PY{n}{index}\PY{p}{,} \PY{n}{normed}\PY{p}{[}\PY{n}{column}\PY{p}{]}\PY{p}{,} \PY{n}{sma\PYZus{}JPM}\PY{p}{,} \PY{n}{sym\PYZus{}mom}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Momentum/SMA}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_27_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{RSI indicator}\label{rsi-indicator}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{c+c1}{\PYZsh{} Specify the start and end dates for this period.}
+         \PY{n}{start\PYZus{}d} \PY{o}{=} \PY{n}{dt}\PY{o}{.}\PY{n}{datetime}\PY{p}{(}\PY{l+m+mi}{2008}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{end\PYZus{}d} \PY{o}{=} \PY{n}{dt}\PY{o}{.}\PY{n}{datetime}\PY{p}{(}\PY{l+m+mi}{2009}\PY{p}{,} \PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{31}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Set dates}
+         \PY{n}{dates} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{date\PYZus{}range}\PY{p}{(}\PY{n}{start\PYZus{}d}\PY{p}{,} \PY{n}{end\PYZus{}d}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Get adjusted close prices for symbol}
+         \PY{n}{df} \PY{o}{=} \PY{n}{get\PYZus{}data}\PY{p}{(}\PY{p}{[}\PY{n}{symbol}\PY{p}{]}\PY{p}{,} \PY{n}{dates}\PY{p}{,} \PY{n}{addSPY}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+         \PY{n}{df} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} 1. Compute RSI}
+         \PY{n}{rsi\PYZus{}JPM} \PY{o}{=} \PY{n}{get\PYZus{}RSI}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{JPM}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} 2. Plot RSI}
+         \PY{n}{plot\PYZus{}rsi\PYZus{}indicator}\PY{p}{(}\PY{n}{dates}\PY{p}{,} \PY{n}{df}\PY{o}{.}\PY{n}{index}\PY{p}{,} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{JPM}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{rsi\PYZus{}JPM}\PY{p}{,} \PY{n}{window}\PY{o}{=}\PY{l+m+mi}{14}\PY{p}{,} 
+                            \PY{n}{title}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{RSI Indicator}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fig\PYZus{}size}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/home/emi/Jupyter/ML4T\_2018Spring/strategy\_learner/indicators.py:100: FutureWarning:
+
+pd.rolling\_apply is deprecated for Series and will be removed in a future version, replace with 
+	Series.rolling(window=14,center=False).apply(func=<function>,args=<tuple>,kwargs=<dict>)
+
+
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_29_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \section{TODO}\label{todo}
+
+Write a PDF report describing your system. The centerpiece of your
+report should be the description of how you utilized your learner to
+determine trades
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}
