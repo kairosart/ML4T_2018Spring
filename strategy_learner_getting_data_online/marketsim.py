@@ -41,7 +41,8 @@ def compute_portvals_single_symbol(df_orders, symbol, start_val=1000000,
     end_date = df_orders.index.max()
 
     # Create a dataframe with adjusted close prices for the symbol and for cash
-    df_prices = fetchOnlineData(start_date, end_date, symbol)
+    df_prices = get_data([symbol], pd.date_range(start_date, end_date))
+    del df_prices["SPY"]
     df_prices["cash"] = 1.0
 
     # Fill NAN values if any
@@ -54,24 +55,24 @@ def compute_portvals_single_symbol(df_orders, symbol, start_val=1000000,
         df_prices.columns)
     for index, row in df_orders.iterrows():
         # Total value of shares purchased or sold
-        traded_share_value = df_prices.loc[index, symbol] * row["Adj Close"]
+        traded_share_value = df_prices.loc[index, symbol] * row["Shares"]
         # Transaction cost 
         transaction_cost = commission + impact * df_prices.loc[index, symbol] \
-                            * abs(row["Adj Close"])
+                            * abs(row["Shares"])
 
         # Update the number of shares and cash based on the type of transaction
         # Note: The same asset may be traded more than once on a particular day
         # If the shares were bought
         if row["Shares"] > 0:
             df_trades.loc[index, symbol] = df_trades.loc[index, symbol] \
-                                            + row["Adj Close"]
+                                            + row["Shares"]
             df_trades.loc[index, "cash"] = df_trades.loc[index, "cash"] \
                                             - traded_share_value \
                                             - transaction_cost
         # If the shares were sold
         elif row["Shares"] < 0:
             df_trades.loc[index, symbol] = df_trades.loc[index, symbol] \
-                                            + row["Adj Close"]
+                                            + row["Shares"]
             df_trades.loc[index, "cash"] = df_trades.loc[index, "cash"] \
                                             - traded_share_value \
                                             - transaction_cost
@@ -97,7 +98,6 @@ def compute_portvals_single_symbol(df_orders, symbol, start_val=1000000,
     # Create portvals dataframe
     portvals = pd.DataFrame(df_value.sum(axis=1), df_value.index, ["port_val"])
     return portvals
-
 
 def market_simulator(df_orders, df_orders_benchmark, symbol, start_val=1000000, commission=9.95, 
     impact=0.005, daily_rf=0.0, samples_per_year=252.0, vertical_lines=False, title="Title", xtitle="X title", ytitle="Y title"):

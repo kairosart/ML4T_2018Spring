@@ -108,7 +108,7 @@ def compute_sharpe_ratio(k, avg_return, risk_free_rate, std_return):
     return k * (avg_return - risk_free_rate) / std_return
     
 
-def plot_data(df, title="Stock prices", xlabel="Date", ylabel="Price", save_fig=False, fig_name="plot.png"):
+def plot_data(df, symbol, title="Stock prices", xlabel="Date", ylabel="Price", save_fig=False, fig_name="plot.png"):
     """Plot stock prices with a custom title and meaningful axis labels."""
     ax = df.plot(title=title, fontsize=12)
     ax.set_xlabel(xlabel)

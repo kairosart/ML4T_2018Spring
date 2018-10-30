@@ -41,7 +41,7 @@ def compute_portvals_single_symbol(df_orders, symbol, start_val=1000000,
     end_date = df_orders.index.max()
 
     # Create a dataframe with adjusted close prices for the symbol and for cash
-    df_prices = fetchOnlineData(start_date, end_date, symbol)
+    df_prices = get_data([symbol], pd.date_range(start_date, end_date))
     del df_prices["SPY"]
     df_prices["cash"] = 1.0
 
@@ -98,7 +98,6 @@ def compute_portvals_single_symbol(df_orders, symbol, start_val=1000000,
     # Create portvals dataframe
     portvals = pd.DataFrame(df_value.sum(axis=1), df_value.index, ["port_val"])
     return portvals
-
 
 def market_simulator(df_orders, df_orders_benchmark, symbol, start_val=1000000, commission=9.95, 
     impact=0.005, daily_rf=0.0, samples_per_year=252.0, vertical_lines=False, title="Title", xtitle="X title", ytitle="Y title"):
