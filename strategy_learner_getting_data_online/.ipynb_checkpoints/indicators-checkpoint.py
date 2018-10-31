@@ -119,6 +119,7 @@ def plot_stock_prices(df_index, sym_price, symbol, title="Stock prices", xlabel=
                 y=sym_price,
                 name = symbol,
                 line = dict(color = '#17BECF'),
+                fill='tonexty',
                 opacity = 0.8)
 
     
@@ -233,6 +234,7 @@ def plot_momentum(df_index, sym_price, sym_mom, title="Momentum Indicator",
                 y=sym_price,
                 name = "JPM",
                 line = dict(color = '#17BECF'),
+                fill='tonexty',
                 opacity = 0.8)
 
     trace_momentum = go.Scatter(
@@ -241,6 +243,7 @@ def plot_momentum(df_index, sym_price, sym_mom, title="Momentum Indicator",
                 name = "Momentum",
                 yaxis='y2',
                 line = dict(color = '#FF8000'),
+                fill='tonexty',
                 opacity = 0.8)
         
 
