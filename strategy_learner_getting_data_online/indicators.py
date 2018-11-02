@@ -234,7 +234,6 @@ def plot_momentum(df_index, sym_price, sym_mom, title="Momentum Indicator",
                 y=sym_price,
                 name = "JPM",
                 line = dict(color = '#17BECF'),
-                fill='tonexty',
                 opacity = 0.8)
 
     trace_momentum = go.Scatter(
