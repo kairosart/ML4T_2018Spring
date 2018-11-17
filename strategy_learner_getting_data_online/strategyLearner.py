@@ -55,16 +55,22 @@ class strategyLearner(object):
         window = 10
         # Compute rolling mean
         rolling_mean = prices.rolling(window=window).mean()
+
         # Compute_rolling_std
         rolling_std = prices.rolling(window=window).std()
+
         # Compute momentum
         momentum = get_momentum(prices, window)
+
         # Compute SMA indicator
         sma_indicator = get_sma_indicator(prices, rolling_mean)
+
         # Get RSI indicator 
         rsi_indicator = get_RSI(prices, window)
+        
         # Compute Bollinger value
         bollinger_val = compute_bollinger_value(prices, rolling_mean, rolling_std)
+        
         # Create a dataframe with three features
         df_features = pd.concat([momentum, sma_indicator], axis=1)
         df_features = pd.concat([df_features, rsi_indicator], axis=1)

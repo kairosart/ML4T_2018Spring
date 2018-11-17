@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import copy
 import datetime as dt
 from util import get_exchange_days, get_data, normalize_data
+from pandas import Series
 
 # Add plotly for interactive charts
 from plotly.offline import init_notebook_mode, iplot
@@ -85,20 +86,34 @@ def compute_bollinger_value(price, rolling_mean, rolling_std):
     return bollinger_val
 
 
-def get_RSI(price, n=14):
-    """Return Relative Strength Index (RSI) of given values, using specified window size."""
-    gain = (price-price.shift(1)).fillna(0) # calculate price gain with previous day, first row nan is filled with 0
+def get_RSI(prices, n=14):
+    deltas = np.diff(prices)
+    seed = deltas[:n+1]
+    up = seed[seed>=0].sum()/n
+    down = -seed[seed<0].sum()/n
+    rs = up/down
+    rsi = np.zeros_like(prices)
+    rsi[:n] = 100. - 100./(1.+rs)
 
-    def rsiCalc(p):
-        # subfunction for calculating rsi for one lookback period
-        avgGain = p[p>0].sum()/n
-        avgLoss = -p[p<0].sum()/n 
-        rs = avgGain/avgLoss
-        return 100 - 100/(1+rs)
+    for i in range(n, len(prices)):
+        delta = deltas[i-1] # cause the diff is 1 shorter
 
-    # run for all periods with rolling_apply
-    return pd.rolling_apply(gain,n,rsiCalc)  
+        if delta>0:
+            upval = delta
+            downval = 0.
+        else:
+            upval = 0.
+            downval = -delta
 
+        up = (up*(n-1) + upval)/n
+        down = (down*(n-1) + downval)/n
+
+        rs = up/down
+        rsi[i] = 100. - 100./(1.+rs)
+    
+    rsi_df = pd.DataFrame(prices)
+
+    return rsi_df
 
 def plot_stock_prices(df_index, sym_price, symbol, title="Stock prices", xlabel="Date", ylabel="Price", fig_size=(12, 6)):
     """Plot Stock Prices.
