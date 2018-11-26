@@ -76,10 +76,13 @@ def compute_portvals_single_symbol(df_orders, symbol, start_val=1000000,
             df_trades.loc[index, "cash"] = df_trades.loc[index, "cash"] \
                                             - traded_share_value \
                                             - transaction_cost
+    
+    
     # Create a dataframe that represents on each particular day how much of
     # each asset in the portfolio
     df_holdings = pd.DataFrame(np.zeros((df_prices.shape)), df_prices.index, 
         df_prices.columns)
+   
     for row_count in range(len(df_holdings)):
         # In the first row, the number shares are the same as in df_trades, 
         # but start_val must be added to cash
@@ -94,7 +97,7 @@ def compute_portvals_single_symbol(df_orders, symbol, start_val=1000000,
 
     # Create a dataframe that represents the monetary value of each asset 
     df_value = df_prices * df_holdings
-    
+   
     # Create portvals dataframe
     portvals = pd.DataFrame(df_value.sum(axis=1), df_value.index, ["port_val"])
     return portvals
